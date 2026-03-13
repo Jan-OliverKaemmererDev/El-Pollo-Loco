@@ -3,10 +3,12 @@ class Character extends MoveableObject {
     speed = 10;
 
     IMAGES_WALKING = [
-        'img/batman/idle/batman-idle1.png',
-        'img/batman/idle/batman-idle2.png',
-        'img/batman/idle/batman-idle3.png',
-        'img/batman/idle/batman-idle4.png'
+        'img/batman/walk/walk-1.png',
+        'img/batman/walk/walk-2.png',
+        'img/batman/walk/walk-3.png',
+        'img/batman/walk/walk-4.png',
+        'img/batman/walk/walk-5.png',
+        'img/batman/walk/walk-6.png'
     ];
     world;
 
