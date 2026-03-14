@@ -1,10 +1,10 @@
 class Bully extends MoveableObject{
 
     IMAGES_WALKING = [
-        'img/bully1/idle/idle-1.png',
-        'img/bully1/idle/idle-2.png',
-        'img/bully1/idle/idle-3.png',
-        'img/bully1/idle/idle-4.png'
+        'img/bully1/walk/bully-walk1.png',
+        'img/bully1/walk/bully-walk2.png',
+        'img/bully1/walk/bully-walk3.png',
+        'img/bully1/walk/bully-walk4.png'
     ];
 
     constructor(){
