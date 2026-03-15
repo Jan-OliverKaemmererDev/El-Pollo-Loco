@@ -13,7 +13,7 @@ class Character extends MoveableObject {
     world;
 
     constructor(){
-        super().loadImage('img/batman/idle/batman-idle1.png');
+        super().loadImage('img/batman/walk/walk-1.png');
         this.loadImages(this.IMAGES_WALKING);
 
         this.animate();
@@ -37,10 +37,7 @@ class Character extends MoveableObject {
         setInterval(() => {
 
         if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT){
-        let i = this.currentImage % this.IMAGES_WALKING.length;
-        let path = this.IMAGES_WALKING[i];
-        this.img = this.imageCache[path];
-        this.currentImage++;
+        this.playAnimation(this.IMAGES_WALKING);
         }
         }, 100);
     }
