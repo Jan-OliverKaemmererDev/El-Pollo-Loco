@@ -1,20 +1,32 @@
 const level1 = new Level(
     [
-        new Bully(),
-        new Bully(),
+        new Chicken(),
+        new Chicken(),
+        new Chicken(),
         new Endboss()
     ],
     [
         new Cloud()
     ],
     [
-        new BackgroundObject('img/background/background1.png', -719),
-        new BackgroundObject2('img/background/background-city.png', -719, 0),
-        new BackgroundObject('img/background/background1.png', 0),
-        new BackgroundObject2('img/background/background-city.png', 0, 0),
-        new BackgroundObject('img/background/background1.png', 719),
-        new BackgroundObject2('img/background/background-city.png', 719, 0),
-        new BackgroundObject('img/background/background1.png', 719*2),
-        new BackgroundObject2('img/background/background-city.png', 719*2, 0)
+        new BackgroundObject('img/5_background/layers/air.png', -719),
+        new BackgroundObject('img/5_background/layers/3_third_layer/1.png',-719, 0),
+        new BackgroundObject('img/5_background/layers/2_second_layer/1.png',-719, 0),
+        new BackgroundObject('img/5_background/layers/1_first_layer/1.png', -719, 0),
+        
+        new BackgroundObject('img/5_background/layers/air.png', 0),
+        new BackgroundObject('img/5_background/layers/3_third_layer/1.png', 0, 0),
+        new BackgroundObject('img/5_background/layers/2_second_layer/1.png', 0, 0),
+        new BackgroundObject('img/5_background/layers/1_first_layer/1.png', 0, 0),
+
+        new BackgroundObject('img/5_background/layers/air.png', 719),
+        new BackgroundObject('img/5_background/layers/3_third_layer/1.png', 719, 0),
+        new BackgroundObject('img/5_background/layers/2_second_layer/1.png', 719, 0),
+        new BackgroundObject('img/5_background/layers/1_first_layer/1.png', 719, 0),
+
+        new BackgroundObject('img/5_background/layers/air.png', 719*2),
+        new BackgroundObject('img/5_background/layers/3_third_layer/1.png',719*2, 0),
+        new BackgroundObject('img/5_background/layers/2_second_layer/1.png',719*2, 0),
+        new BackgroundObject('img/5_background/layers/1_first_layer/1.png', 719*2, 0)
     ]
 );
