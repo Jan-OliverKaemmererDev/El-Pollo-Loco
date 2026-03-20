@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="img/favicon.png" />
     <link rel="stylesheet" href="style.css">
     <title>El Pollo Loco</title>
     <script src="models/drawable-object.class.js"></script>
@@ -22,13 +23,114 @@
     <script src="levels/level1.js"></script>
     <script src="models/world.class.js"></script>
     <script src="scripts/game.js"></script>
+    <script src="scripts/landing.js"></script>
 </head>
 
-<body onload="init()">
+<body>
     <h1>El Pollo Loco</h1>
 
-    <canvas id="canvas" width="720" height="480">
+    <div id="game-container">
+        <canvas id="canvas" width="720" height="480"></canvas>
 
-    </canvas>
+        <!-- Game Over Overlay -->
+        <div id="game-over-screen" class="hidden">
+            <div id="game-over-content">
+                <div class="game-over-buttons">
+                    <button id="btn-restart" onclick="restartGame()">Restart Game</button>
+                    <button id="btn-home" onclick="goHome()">Home Screen</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Start Screen Overlay -->
+        <div id="start-screen">
+            <div id="start-screen-content">
+                <div id="start-buttons">
+                    <button id="btn-start" onclick="startGame()">Start Game</button>
+                    <div id="secondary-buttons">
+                        <button id="btn-instructions" onclick="openDialog('instructions-dialog')">How to Play</button>
+                        <button id="btn-controls" onclick="openDialog('controls-dialog')">Controls</button>
+                        <button id="btn-story" onclick="openDialog('story-dialog')">Story</button>
+                    </div>
+                </div>
+                <button id="btn-fullscreen" onclick="toggleFullscreen()" title="Fullscreen">
+                    <img src="img/fullscreen.svg" alt="Fullscreen" id="fullscreen-icon">
+                </button>
+            </div>
+        </div>
+
+        <!-- Instructions Dialog -->
+        <div id="instructions-dialog" class="dialog-overlay" onclick="closeDialogOnBackdrop(event, 'instructions-dialog')">
+            <div class="dialog-box">
+                <button class="dialog-close" onclick="closeDialog('instructions-dialog')">&times;</button>
+                <h2>How to Play</h2>
+                <div class="dialog-content">
+                    <p>Navigate Pepe through the desert to defeat the <strong>evil chicken boss</strong>!</p>
+                    <ul>
+                        <li>🏃 <strong>Move</strong> through the level using arrow keys</li>
+                        <li>🦅 <strong>Jump</strong> on enemies to squash them</li>
+                        <li>🍾 <strong>Collect bottles</strong> dropped by defeated enemies</li>
+                        <li>🎯 <strong>Throw bottles</strong> at the Endboss to defeat him</li>
+                        <li>❤️ <strong>Watch your health bar</strong> — avoid getting hit!</li>
+                    </ul>
+                    <p>Reach the end of the level and defeat the boss chicken to win!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls Dialog -->
+        <div id="controls-dialog" class="dialog-overlay" onclick="closeDialogOnBackdrop(event, 'controls-dialog')">
+            <div class="dialog-box">
+                <button class="dialog-close" onclick="closeDialog('controls-dialog')">&times;</button>
+                <h2>Keyboard Controls</h2>
+                <div class="dialog-content">
+                    <div class="controls-grid">
+                        <div class="control-item">
+                            <span class="key">←</span>
+                            <span class="control-label">Move Left</span>
+                        </div>
+                        <div class="control-item">
+                            <span class="key">→</span>
+                            <span class="control-label">Move Right</span>
+                        </div>
+                        <div class="control-item">
+                            <span class="key">↑</span>
+                            <span class="control-label">Jump</span>
+                        </div>
+                        <div class="control-item">
+                            <span class="key">SPACE</span>
+                            <span class="control-label">Jump</span>
+                        </div>
+                        <div class="control-item">
+                            <span class="key">D</span>
+                            <span class="control-label">Throw Bottle</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Story Dialog -->
+        <div id="story-dialog" class="dialog-overlay" onclick="closeDialogOnBackdrop(event, 'story-dialog')">
+            <div class="dialog-box">
+                <button class="dialog-close" onclick="closeDialog('story-dialog')">&times;</button>
+                <h2>The Story</h2>
+                <div class="dialog-content">
+                    <p class="story-text">
+                        In the scorching deserts of Mexico, <strong>Pepe</strong> — a brave adventurer — discovers that 
+                        the local chicken population has gone completely <em>loco</em>!
+                    </p>
+                    <p class="story-text">
+                        Led by a giant, fearsome <strong>Boss Chicken</strong>, the poultry army is terrorizing 
+                        the countryside! Armed only with his wits and an unlimited supply of <strong>salsa bottles</strong>, 
+                        Pepe must fight his way through hordes of crazy chickens.
+                    </p>
+                    <p class="story-text">
+                        Can you help Pepe defeat <strong>El Pollo Loco</strong> and restore peace to the desert? 🌵🐔
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

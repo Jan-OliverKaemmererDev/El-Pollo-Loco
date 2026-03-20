@@ -5,6 +5,7 @@ let keyboard = new Keyboard();
 
 function init(){
     canvas = document.getElementById('canvas');
+    initLevel(); // generate a fresh set of enemies and objects
     world = new World(canvas, keyboard);
 
     

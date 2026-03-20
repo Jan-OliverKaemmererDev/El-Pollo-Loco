@@ -59,21 +59,25 @@ class Character extends MoveableObject {
         this.animate();
     }
 
+    isDeadAnimationTriggered = false;
+
     animate(){
 
         setInterval(() => {
-            if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x){
-                this.moveRight();
-                this.otherDirection = false;
-            }
+            if (!this.isDead()) {
+                if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x){
+                    this.moveRight();
+                    this.otherDirection = false;
+                }
 
-            if (this.world.keyboard.LEFT && this.x > 0){
-                this.moveLeft();
-                this.otherDirection = true;
-            }
+                if (this.world.keyboard.LEFT && this.x > 0){
+                    this.moveLeft();
+                    this.otherDirection = true;
+                }
 
-            if(this.world.keyboard.SPACE && !this.isAboveGround()){
-                this.jump();
+                if(this.world.keyboard.SPACE && !this.isAboveGround()){
+                    this.jump();
+                }
             }
 
             this.world.camera_x = -this.x + 100;
@@ -82,7 +86,19 @@ class Character extends MoveableObject {
         setInterval(() => {
 
         if(this.isDead()){
-            this.playAnimation(this.IMAGES_DEAD);
+            if (!this.isDeadAnimationTriggered) {
+                this.isDeadAnimationTriggered = true;
+                this.currentImage = 0;
+                setTimeout(() => {
+                    this.world.showGameOverScreen();
+                }, (this.IMAGES_DEAD.length * 100) + 500);
+            }
+            
+            if (this.currentImage < this.IMAGES_DEAD.length) {
+                this.playAnimation(this.IMAGES_DEAD);
+            } else {
+                this.loadImage(this.IMAGES_DEAD[this.IMAGES_DEAD.length - 1]);
+            }
         } else if(this.isHurt()){
             this.playAnimation(this.IMAGES_HURT);
         } else if(this.isAboveGround()){

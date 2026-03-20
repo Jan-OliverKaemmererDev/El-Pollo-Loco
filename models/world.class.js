@@ -129,4 +129,11 @@ class World {
     mo.x = mo.x * -1;
     this.ctx.restore();
   }
+
+  showGameOverScreen() {
+      // Call global function located in landing.js
+      if (typeof showGameOver === 'function') {
+          showGameOver();
+      }
+  }
 }

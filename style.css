@@ -6,44 +6,405 @@
 }
 
 body {
-    font-family: "ZABRAS", sans-serif;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-    background-position: center;
-    background-image: url('img/wallpaper.png');
+  font-family: "ZABRAS", sans-serif;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  background-position: center;
+  background-size: cover;
+  background-image: url("img/wallpaper.png");
 }
 
 h1 {
-    color: antiquewhite;
-    font-size: 48px;
-    white-space: nowrap;
-    -webkit-text-stroke-width: 0.3px;
-    -webkit-text-stroke-color: black;
-    text-shadow: 4px 4px 8px rgba(126, 126, 126, 0.902);
+  color: antiquewhite;
+  font-size: 48px;
+  white-space: nowrap;
+  -webkit-text-stroke-width: 0.3px;
+  -webkit-text-stroke-color: black;
+  text-shadow: 4px 4px 8px rgba(126, 126, 126, 0.902);
+}
+
+/* ===================== GAME CONTAINER ===================== */
+
+#game-container {
+  position: relative;
+  width: 720px;
+  height: 480px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0px 0px 50px 0px rgba(0, 0, 0, 1);
 }
 
 canvas {
-    background-color: rgb(94, 94, 94);
-    border-radius: 16px;
-    display: block;
+  background-color: rgb(94, 94, 94);
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
-@media only screen and (max-width: 720px){
-    canvas {
-        width: 100%;
-    }
+/* ===================== GAME OVER SCREEN ===================== */
+
+#game-over-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("img/9_intro_outro_screens/game_over/game over.png");
+  background-size: cover;
+  background-position: center;
+  z-index: 10;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
 }
 
-@media only screen and (max-height: 480px){
-    h1 {
-        display: none;
-    }
-    canvas {
-        height: 100vh;
-        border-radius: 0;
-    }
+#game-over-screen.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+#game-over-content {
+  width: 100%;
+  padding: 30px 20px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0) 100%);
+}
+
+.game-over-buttons {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* ===================== START SCREEN ===================== */
+
+#start-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("img/9_intro_outro_screens/start/startscreen_1.png");
+  background-size: cover;
+  background-position: center;
+  z-index: 10;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+#start-screen.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+#start-screen-content {
+  width: 100%;
+  padding: 30px 20px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0) 100%);
+}
+
+#start-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ===================== BUTTONS ===================== */
+
+#btn-start, #btn-restart, #btn-home {
+  font-family: "ZABRAS", sans-serif;
+  font-size: 28px;
+  padding: 12px 48px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  color: #fff;
+  background: linear-gradient(180deg, #f5a623 0%, #e08e0b 50%, #c67a00 100%);
+  box-shadow: 0 4px 15px rgba(245, 166, 35, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+  letter-spacing: 1px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+#btn-start:hover, #btn-restart:hover, #btn-home:hover {
+  transform: scale(1.06);
+  box-shadow: 0 6px 25px rgba(245, 166, 35, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+#btn-start:active, #btn-restart:active, #btn-home:active {
+  transform: scale(0.97);
+}
+
+#secondary-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+#secondary-buttons button {
+  font-family: "ZABRAS", sans-serif;
+  font-size: 16px;
+  padding: 8px 20px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 8px;
+  cursor: pointer;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+}
+
+#secondary-buttons button:hover {
+  background: rgba(245, 166, 35, 0.5);
+  border-color: #f5a623;
+  transform: scale(1.05);
+}
+
+#secondary-buttons button:active {
+  transform: scale(0.97);
+}
+
+/* Fullscreen Button */
+
+#btn-fullscreen {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+#btn-fullscreen:hover {
+  background: rgba(245, 166, 35, 0.5);
+  transform: scale(1.1);
+}
+
+#btn-fullscreen img {
+  width: 22px;
+  height: 22px;
+  filter: brightness(0) invert(1);
+}
+
+/* ===================== DIALOG OVERLAY ===================== */
+
+.dialog-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(3px);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.dialog-overlay.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+}
+
+.dialog-box {
+  background: linear-gradient(160deg, #2c1810 0%, #1a0e08 100%);
+  border: 2px solid #f5a623;
+  border-radius: 16px;
+  padding: 28px 30px 24px;
+  max-width: 85%;
+  max-height: 80%;
+  overflow-y: auto;
+  position: relative;
+  color: #f0e6d2;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(245, 166, 35, 0.2);
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+}
+
+.dialog-overlay.active .dialog-box {
+  transform: scale(1);
+}
+
+.dialog-close {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #f5a623;
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.2s ease, transform 0.15s ease;
+}
+
+.dialog-close:hover {
+  color: #ff4444;
+  transform: scale(1.2);
+}
+
+.dialog-box h2 {
+  font-family: "ZABRAS", sans-serif;
+  font-size: 26px;
+  color: #f5a623;
+  margin: 0 0 16px 0;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+.dialog-content {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.dialog-content p {
+  margin: 0 0 12px 0;
+}
+
+.dialog-content ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 12px 0;
+}
+
+.dialog-content li {
+  padding: 4px 0;
+}
+
+/* ===================== CONTROLS GRID ===================== */
+
+.controls-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.control-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 48px;
+  height: 38px;
+  padding: 4px 12px;
+  background: linear-gradient(180deg, #3a3a3a 0%, #1a1a1a 100%);
+  border: 1px solid #555;
+  border-bottom-width: 3px;
+  border-radius: 6px;
+  color: #f0e6d2;
+  font-family: "ZABRAS", sans-serif;
+  font-size: 16px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.control-label {
+  font-size: 15px;
+  color: #ccc;
+}
+
+/* ===================== STORY ===================== */
+
+.story-text {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #e0d5c0;
+}
+
+/* ===================== FULLSCREEN STATE ===================== */
+
+#game-container:fullscreen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  border-radius: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+#game-container:fullscreen canvas {
+  border-radius: 0;
+}
+
+/* ===================== RESPONSIVE ===================== */
+
+@media only screen and (max-width: 720px) {
+  #game-container {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 720 / 480;
+  }
+
+  #btn-start, #btn-restart, #btn-home {
+    font-size: 22px;
+    padding: 10px 36px;
+  }
+
+  #secondary-buttons {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  #secondary-buttons button {
+    font-size: 13px;
+    padding: 6px 14px;
+  }
+
+  .dialog-box {
+    padding: 20px 18px 16px;
+  }
+
+  .dialog-box h2 {
+    font-size: 20px;
+  }
+}
+
+@media only screen and (max-height: 480px) {
+  h1 {
+    display: none;
+  }
+
+  #game-container {
+    height: 100vh;
+    width: auto;
+    aspect-ratio: 720 / 480;
+    border-radius: 0;
+    box-shadow: none;
+  }
 }
