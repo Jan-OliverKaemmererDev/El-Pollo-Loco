@@ -10,6 +10,8 @@
     <script src="models/drawable-object.class.js"></script>
     <script src="models/moveable-object.class.js"></script>
     <script src="models/status-bar.class.js"></script>
+    <script src="models/bottle-bar.class.js"></script>
+    <script src="models/boss-bar.class.js"></script>
     <script src="models/character.class.js"></script>
     <script src="models/chicken.class.js"></script>
     <script src="models/small-chicken.class.js"></script>
@@ -38,6 +40,15 @@
                 <div class="game-over-buttons">
                     <button id="btn-restart" onclick="restartGame()">Restart Game</button>
                     <button id="btn-home" onclick="goHome()">Home Screen</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="win-screen" class="hidden">
+            <div id="win-content">
+                <div class="game-over-buttons">
+                    <button id="btn-restart-win" onclick="restartGame()">Restart Game</button>
+                    <button id="btn-home-win" onclick="goHome()">Home Screen</button>
                 </div>
             </div>
         </div>

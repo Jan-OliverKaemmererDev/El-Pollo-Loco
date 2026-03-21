@@ -12,11 +12,14 @@ class MoveableObject extends DrawableObject {
         bottom: 0
     };
 
-    applyGravity(){
+    applyGravity() {
         setInterval(() => {
-            if(this.isAboveGround() || this.speedY > 0) {
-            this.y -= this.speedY;
-            this.speedY -= this.acceleration;
+            if (this.isAboveGround() || this.speedY > 0) {
+                this.y -= this.speedY;
+                this.speedY -= this.acceleration;
+            } else {
+                this.speedY = 0;
+                this.y = 250;
             }
         }, 1000 / 25);
     }
@@ -30,10 +33,15 @@ class MoveableObject extends DrawableObject {
     }
 
     isColliding(mo) {
-        return this.x + this.width - this.offset.right > mo.x + mo.offset.left &&
-               this.y + this.height - this.offset.bottom > mo.y + mo.offset.top &&
-               this.x + this.offset.left < mo.x + mo.width - mo.offset.right &&
-               this.y + this.offset.top < mo.y + mo.height - mo.offset.bottom;
+        let moOffsetTop = mo.offset ? mo.offset.top : 0;
+        let moOffsetBottom = mo.offset ? mo.offset.bottom : 0;
+        let moOffsetLeft = mo.offset ? mo.offset.left : 0;
+        let moOffsetRight = mo.offset ? mo.offset.right : 0;
+
+        return this.x + this.width - this.offset.right > mo.x + moOffsetLeft &&
+               this.y + this.height - this.offset.bottom > mo.y + moOffsetTop &&
+               this.x + this.offset.left < mo.x + mo.width - moOffsetRight &&
+               this.y + this.offset.top < mo.y + mo.height - moOffsetBottom;
     }
 
     hit(){

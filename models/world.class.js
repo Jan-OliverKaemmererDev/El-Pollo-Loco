@@ -6,6 +6,9 @@ class World {
   keyboard;
   camera_x = 0;
   statusBar = new StatusBar();
+  bottleBar = new BottleBar();
+  bossBar = new EndbossBar();
+  bossVisible = false;
   throwableObjects = [];
   throwCooldown = false;
 
@@ -29,16 +32,26 @@ class World {
     setInterval(() => {
       this.checkCollisions();
       this.checkThrowObjects();
+      this.checkBottleCollisions();
+      this.checkBottleHitsEnemy();
+      this.checkBossVisibility();
     }, 1000 / 60);
   }
 
+  checkBossVisibility() {
+    if (this.character.x > 2300) {
+      this.bossVisible = true;
+    }
+  }
+
   checkThrowObjects() {
-    if (this.keyboard.D && !this.throwCooldown) {
-      let batarang = new ThrowableObject(
+    if (this.keyboard.D && !this.throwCooldown && this.bottleBar.percentage > 0) {
+      let bottle = new ThrowableObject(
         this.character.x + 100,
         this.character.y + 100,
       );
-      this.throwableObjects.push(batarang);
+      this.throwableObjects.push(bottle);
+      this.bottleBar.setPercentage(this.bottleBar.percentage - 20);
       this.throwCooldown = true;
       setTimeout(() => {
         this.throwCooldown = false;
@@ -51,17 +64,19 @@ class World {
       if (this.character.isColliding(enemy)) {
         if (
           this.character.speedY < 0 &&
+          this.character.isAboveGround() &&
           enemy instanceof Chicken &&
           !enemy.isDead
         ) {
           // Draufspringen
           enemy.die();
+          this.character.bounce();
           setTimeout(() => {
             let index = this.level.enemies.indexOf(enemy);
             if (index > -1) {
               this.level.enemies.splice(index, 1);
               this.level.collectableObjects.push(
-                new Bottle(enemy.x, enemy.y + 10),
+                new Bottle(enemy.x, 360),
               );
             }
           }, 200);
@@ -74,6 +89,48 @@ class World {
     });
   }
 
+  checkBottleCollisions() {
+    this.level.collectableObjects.forEach((item, index) => {
+      if (this.character.isColliding(item) && item instanceof Bottle) {
+        this.level.collectableObjects.splice(index, 1);
+        let newPercentage = this.bottleBar.percentage + 20;
+        if (newPercentage > 100) newPercentage = 100;
+        this.bottleBar.setPercentage(newPercentage);
+      }
+    });
+  }
+
+  checkBottleHitsEnemy() {
+    this.throwableObjects.forEach((bottle, bIndex) => {
+      this.level.enemies.forEach((enemy) => {
+        if (bottle.isColliding(enemy) && !enemy.isDead) {
+          if (enemy instanceof Chicken) {
+            enemy.die();
+            this.throwableObjects.splice(bIndex, 1);
+            setTimeout(() => {
+              let index = this.level.enemies.indexOf(enemy);
+              if (index > -1) {
+                this.level.enemies.splice(index, 1);
+                this.level.collectableObjects.push(new Bottle(enemy.x, 360));
+              }
+            }, 200);
+          } else if (enemy instanceof Endboss) {
+            enemy.energy -= 20;
+            if (enemy.energy < 0) enemy.energy = 0;
+            this.bossBar.setPercentage(enemy.energy);
+            this.throwableObjects.splice(bIndex, 1);
+            if (enemy.energy == 0) {
+              enemy.die();
+              setTimeout(() => {
+                showWin();
+              }, 500);
+            }
+          }
+        }
+      });
+    });
+  }
+
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -83,6 +140,10 @@ class World {
 
     this.ctx.translate(-this.camera_x, 0);
     this.addToMap(this.statusBar);
+    this.addToMap(this.bottleBar);
+    if (this.bossVisible) {
+      this.addToMap(this.bossBar);
+    }
     this.ctx.translate(this.camera_x, 0);
 
     this.addToMap(this.character);
@@ -131,9 +192,9 @@ class World {
   }
 
   showGameOverScreen() {
-      // Call global function located in landing.js
-      if (typeof showGameOver === 'function') {
-          showGameOver();
-      }
+    // Call global function located in landing.js
+    if (typeof showGameOver === "function") {
+      showGameOver();
+    }
   }
 }

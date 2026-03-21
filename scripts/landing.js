@@ -14,6 +14,13 @@ function showGameOver() {
 }
 
 /**
+ * Shows the Win screen.
+ */
+function showWin() {
+  document.getElementById("win-screen").classList.remove("hidden");
+}
+
+/**
  * Restarts the game by clearing all intervals and initializing a new world.
  */
 function restartGame() {
@@ -22,8 +29,9 @@ function restartGame() {
     window.clearInterval(i);
   }
   
-  // Hide the Game Over screen
+  // Hide the Game Over and Win screens
   document.getElementById("game-over-screen").classList.add("hidden");
+  document.getElementById("win-screen").classList.add("hidden");
   
   // Start a fresh game
   init();
@@ -38,8 +46,9 @@ function goHome() {
     window.clearInterval(i);
   }
   
-  // Hide the Game Over screen and show the start screen
+  // Hide the Game Over or Win screen and show the start screen
   document.getElementById("game-over-screen").classList.add("hidden");
+  document.getElementById("win-screen").classList.add("hidden");
   document.getElementById("start-screen").classList.remove("hidden");
 }
 
