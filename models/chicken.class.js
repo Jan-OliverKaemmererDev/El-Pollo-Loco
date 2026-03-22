@@ -30,7 +30,7 @@ class Chicken extends MoveableObject{
 
     animate(){
         setInterval(() => {
-            if (!this.isDead && this.world && !this.world.character.isDead()) {
+            if (!this.isDead && this.world && !this.world.character.isDead() && !this.world.isEndbossDead()) {
                 if (this.x > this.world.character.x) {
                     this.moveLeft();
                     this.otherDirection = false;
@@ -43,7 +43,7 @@ class Chicken extends MoveableObject{
         
 
         setInterval(() => {
-            if (!this.isDead && this.world && !this.world.character.isDead()) {
+            if (!this.isDead && this.world && !this.world.character.isDead() && !this.world.isEndbossDead()) {
                 this.playAnimation(this.IMAGES_WALKING);
             }
         }, 300);

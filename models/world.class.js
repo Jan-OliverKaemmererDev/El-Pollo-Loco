@@ -8,6 +8,7 @@ class World {
   statusBar = new StatusBar();
   bottleBar = new BottleBar();
   bossBar = new EndbossBar();
+  coinBar = new CoinBar();
   bossVisible = false;
   throwableObjects = [];
   throwCooldown = false;
@@ -80,10 +81,14 @@ class World {
             let index = this.level.enemies.indexOf(enemy);
             if (index > -1) {
               this.level.enemies.splice(index, 1);
-              this.level.collectableObjects.push(new Bottle(enemy.x, 360));
+              if (Math.random() < 0.5) {
+                this.level.collectableObjects.push(new Bottle(enemy.x, 360));
+              } else {
+                this.level.collectableObjects.push(new HealthHeart(enemy.x, 360));
+              }
             }
           }, 200);
-        } else if (!enemy.isDead && !this.character.isHurt()) {
+        } else if (!enemy.isDead && !this.character.isHurt() && !this.isEndbossDead()) {
           // Normaler Treffer
           if (enemy instanceof Endboss) {
             this.character.hit(10);
@@ -96,6 +101,7 @@ class World {
     });
   }
 
+  // Check bottle collisions
   checkBottleCollisions() {
     this.level.collectableObjects.forEach((item, index) => {
       if (this.character.isColliding(item) && item instanceof Bottle) {
@@ -103,6 +109,18 @@ class World {
         let newPercentage = this.bottleBar.percentage + 20;
         if (newPercentage > 100) newPercentage = 100;
         this.bottleBar.setPercentage(newPercentage);
+      } else if (this.character.isColliding(item) && item instanceof Coin) {
+        this.level.collectableObjects.splice(index, 1);
+        let newPercentage = this.coinBar.percentage + 2; // Each coin gives a little percentage
+        if (newPercentage > 100) newPercentage = 100;
+        this.coinBar.setPercentage(newPercentage);
+      } else if (this.character.isColliding(item) && item instanceof HealthHeart) {
+        this.level.collectableObjects.splice(index, 1);
+        this.character.energy += 20;
+        if (this.character.energy > 100) {
+            this.character.energy = 100;
+        }
+        this.statusBar.setPercentage(this.character.energy);
       }
     });
   }
@@ -121,7 +139,11 @@ class World {
               let index = this.level.enemies.indexOf(enemy);
               if (index > -1) {
                 this.level.enemies.splice(index, 1);
-                this.level.collectableObjects.push(new Bottle(enemy.x, 360));
+                if (Math.random() < 0.5) {
+                  this.level.collectableObjects.push(new Bottle(enemy.x, 360));
+                } else {
+                  this.level.collectableObjects.push(new HealthHeart(enemy.x, 360));
+                }
               }
             }, 200);
           } else if (enemy instanceof Endboss) {
@@ -167,8 +189,10 @@ class World {
     this.addObjectsToMap(this.level.clouds);
 
     this.ctx.translate(-this.camera_x, 0);
+    // ------ Space for fixed objects -----
     this.addToMap(this.statusBar);
     this.addToMap(this.bottleBar);
+    this.addToMap(this.coinBar);
     if (this.bossVisible) {
       this.addToMap(this.bossBar);
     }
@@ -225,4 +249,10 @@ class World {
       showGameOver();
     }
   }
+
+  isEndbossDead() {
+    let endboss = this.level.enemies.find(e => e instanceof Endboss);
+    return endboss ? endboss.isDead : false;
+  }
 }
+
