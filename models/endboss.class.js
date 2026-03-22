@@ -89,14 +89,16 @@ class Endboss extends MoveableObject {
   }
 
   moveTowardsCharacter() {
-    if (this.hadFirstContact && !this.isDead && !this.isAlert && !this.isHurt) {
-      // The Endboss should walk towards the character
-      if (this.world && this.x > this.world.character.x) {
-        this.moveLeft();
-        this.otherDirection = false;
-      } else {
-        this.moveRight();
-        this.otherDirection = true;
+    if (this.hadFirstContact && !this.isDead && !this.isAlert && !this.isHurt && (!this.world || !this.world.character.isDead())) {
+      if (!this.isColliding(this.world.character)) {
+        // The Endboss should walk towards the character
+        if (this.world && this.x > this.world.character.x) {
+          this.moveLeft();
+          this.otherDirection = false;
+        } else {
+          this.moveRight();
+          this.otherDirection = true;
+        }
       }
     }
   }
@@ -106,11 +108,13 @@ class Endboss extends MoveableObject {
       if (this.currentImage < this.IMAGES_DEAD.length) {
         this.playAnimation(this.IMAGES_DEAD);
       }
+    } else if (this.world && this.world.character.isDead()) {
+      // Do nothing, freeze like chickens
     } else if (this.isHurt) {
       this.playAnimation(this.IMAGES_HURT);
     } else if (this.isAlert) {
       this.playAnimation(this.IMAGES_ALERT);
-    } else if (this.isAttacking) {
+    } else if (this.isAttacking || this.isColliding(this.world.character)) {
       this.playAnimation(this.IMAGES_ATTACK);
     } else if (this.hadFirstContact) {
       this.playAnimation(this.IMAGES_WALKING);
@@ -121,7 +125,7 @@ class Endboss extends MoveableObject {
   }
 
   triggerRandomAttack() {
-    if (this.hadFirstContact && !this.isDead && !this.isAlert && !this.isHurt) {
+    if (this.hadFirstContact && !this.isDead && !this.isAlert && !this.isHurt && (!this.world || !this.world.character.isDead())) {
       if (Math.random() < 0.4) { // 40% chance every 2.5s
         this.isAttacking = true;
         setTimeout(() => {

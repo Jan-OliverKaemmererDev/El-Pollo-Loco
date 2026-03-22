@@ -83,9 +83,13 @@ class World {
               this.level.collectableObjects.push(new Bottle(enemy.x, 360));
             }
           }, 200);
-        } else if (!enemy.isDead) {
+        } else if (!enemy.isDead && !this.character.isHurt()) {
           // Normaler Treffer
-          this.character.hit();
+          if (enemy instanceof Endboss) {
+            this.character.hit(10);
+          } else {
+            this.character.hit(5);
+          }
           this.statusBar.setPercentage(this.character.energy);
         }
       }
