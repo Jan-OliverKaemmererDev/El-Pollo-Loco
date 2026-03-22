@@ -34,6 +34,7 @@ class World {
       this.checkThrowObjects();
       this.checkBottleCollisions();
       this.checkBottleHitsEnemy();
+      this.checkBottleHitsGround();
       this.checkBossVisibility();
     }, 1000 / 60);
   }
@@ -45,7 +46,11 @@ class World {
   }
 
   checkThrowObjects() {
-    if (this.keyboard.D && !this.throwCooldown && this.bottleBar.percentage > 0) {
+    if (
+      this.keyboard.D &&
+      !this.throwCooldown &&
+      this.bottleBar.percentage > 0
+    ) {
       let bottle = new ThrowableObject(
         this.character.x + 100,
         this.character.y + 100,
@@ -75,9 +80,7 @@ class World {
             let index = this.level.enemies.indexOf(enemy);
             if (index > -1) {
               this.level.enemies.splice(index, 1);
-              this.level.collectableObjects.push(
-                new Bottle(enemy.x, 360),
-              );
+              this.level.collectableObjects.push(new Bottle(enemy.x, 360));
             }
           }, 200);
         } else if (!enemy.isDead) {
@@ -103,10 +106,13 @@ class World {
   checkBottleHitsEnemy() {
     this.throwableObjects.forEach((bottle, bIndex) => {
       this.level.enemies.forEach((enemy) => {
-        if (bottle.isColliding(enemy) && !enemy.isDead) {
+        if (bottle.isColliding(enemy) && !enemy.isDead && !bottle.isSplashed) {
           if (enemy instanceof Chicken) {
             enemy.die();
-            this.throwableObjects.splice(bIndex, 1);
+            bottle.splash();
+            setTimeout(() => {
+              this.throwableObjects.splice(bIndex, 1);
+            }, 300);
             setTimeout(() => {
               let index = this.level.enemies.indexOf(enemy);
               if (index > -1) {
@@ -118,7 +124,11 @@ class World {
             enemy.energy -= 20;
             if (enemy.energy < 0) enemy.energy = 0;
             this.bossBar.setPercentage(enemy.energy);
-            this.throwableObjects.splice(bIndex, 1);
+            enemy.playHurt();
+            bottle.splash();
+            setTimeout(() => {
+              this.throwableObjects.splice(bIndex, 1);
+            }, 300);
             if (enemy.energy == 0) {
               enemy.die();
               setTimeout(() => {
@@ -128,6 +138,20 @@ class World {
           }
         }
       });
+    });
+  }
+
+  checkBottleHitsGround() {
+    this.throwableObjects.forEach((bottle) => {
+      if (bottle.y >= 360 && !bottle.isSplashed) {
+        bottle.splash();
+        setTimeout(() => {
+          let index = this.throwableObjects.indexOf(bottle);
+          if (index > -1) {
+            this.throwableObjects.splice(index, 1);
+          }
+        }, 300);
+      }
     });
   }
 

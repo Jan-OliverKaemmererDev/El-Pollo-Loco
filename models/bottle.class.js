@@ -2,8 +2,15 @@ class Bottle extends MoveableObject {
     height = 60;
     width = 50;
 
+    IMAGES = [
+        'img/6_salsa_bottle/1_salsa_bottle_on_ground.png',
+        'img/6_salsa_bottle/2_salsa_bottle_on_ground.png'
+    ];
+
     constructor(x, y) {
-        super().loadImage('img/6_salsa_bottle/salsa_bottle.png');
+        super();
+        let randomIndex = Math.floor(Math.random() * this.IMAGES.length);
+        this.loadImage(this.IMAGES[randomIndex]);
         this.x = x;
         this.y = y;
     }
