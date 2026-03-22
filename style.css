@@ -427,6 +427,12 @@ canvas {
   border-radius: 10px;
 }
 
+.space {
+  font-size: 20px !important;
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+}
+
 .control-item .key {
   font-family: Arial, sans-serif;
   font-weight: bold;
