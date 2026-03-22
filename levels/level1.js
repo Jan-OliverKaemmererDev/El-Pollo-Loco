@@ -15,7 +15,14 @@ function initLevel() {
       new SmallChicken(),
       new Endboss(),
     ],
-    [new Cloud()],
+    [
+      new Cloud('img/5_background/layers/4_clouds/1.png', 0),
+      new Cloud('img/5_background/layers/4_clouds/2.png', 700),
+      new Cloud('img/5_background/layers/4_clouds/1.png', 1400),
+      new Cloud('img/5_background/layers/4_clouds/2.png', 2100),
+      new Cloud('img/5_background/layers/4_clouds/1.png', 2800),
+      new Cloud('img/5_background/layers/4_clouds/2.png', 3500)
+    ],
     [
       new BackgroundObject("img/5_background/layers/air.png", -719),
       new BackgroundObject("img/5_background/layers/3_third_layer/1.png",-719,0,),
