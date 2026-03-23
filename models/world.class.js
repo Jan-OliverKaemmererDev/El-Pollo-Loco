@@ -57,7 +57,7 @@ class World {
         this.character.y + 100,
       );
       this.throwableObjects.push(bottle);
-      this.bottleBar.setPercentage(this.bottleBar.percentage - 20);
+      this.bottleBar.setPercentage(this.bottleBar.percentage - 10);
       this.throwCooldown = true;
       setTimeout(() => {
         this.throwCooldown = false;
@@ -104,9 +104,9 @@ class World {
   // Check bottle collisions
   checkBottleCollisions() {
     this.level.collectableObjects.forEach((item, index) => {
-      if (this.character.isColliding(item) && item instanceof Bottle) {
+      if (this.character.isColliding(item) && item instanceof Bottle && this.bottleBar.percentage < 100) {
         this.level.collectableObjects.splice(index, 1);
-        let newPercentage = this.bottleBar.percentage + 20;
+        let newPercentage = this.bottleBar.percentage + 10;
         if (newPercentage > 100) newPercentage = 100;
         this.bottleBar.setPercentage(newPercentage);
       } else if (this.character.isColliding(item) && item instanceof Coin) {
@@ -114,7 +114,7 @@ class World {
         let newPercentage = this.coinBar.percentage + 2; // Each coin gives a little percentage
         if (newPercentage > 100) newPercentage = 100;
         this.coinBar.setPercentage(newPercentage);
-      } else if (this.character.isColliding(item) && item instanceof HealthHeart) {
+      } else if (this.character.isColliding(item) && item instanceof HealthHeart && this.character.energy < 100) {
         this.level.collectableObjects.splice(index, 1);
         this.character.energy += 20;
         if (this.character.energy > 100) {

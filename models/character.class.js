@@ -169,7 +169,7 @@ class Character extends MoveableObject {
     }
 
     bounce() {
-        this.speedY = 15;
+        this.speedY = 10;
         this.idleTimer = 0;
     }
 }
