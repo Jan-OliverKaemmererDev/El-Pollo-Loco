@@ -20,5 +20,15 @@ class SmallChicken extends Chicken {
     die() {
         this.isDead = true;
         this.loadImage('img/3_enemies_chicken/chicken_small/2_dead/dead.png');
+
+        if (this.world) {
+            let livingSmallChickens = this.world.level.enemies.filter(
+                (e) => e instanceof SmallChicken && !e.isDead
+            );
+            
+            if (livingSmallChickens.length === 0) {
+                soundManager.stopSmallChickenSound();
+            }
+        }
     }
 }

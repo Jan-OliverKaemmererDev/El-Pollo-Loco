@@ -113,6 +113,10 @@ class Character extends MoveableObject {
                 }
             }
 
+            if (this.idleTimer <= 2000) {
+                if (typeof soundManager !== 'undefined') soundManager.stopSnoreSound();
+            }
+
             this.world.camera_x = -this.x + 100;
         }, 1000 / 60);
 
@@ -156,6 +160,7 @@ class Character extends MoveableObject {
                 this.idleTimer += 200;
                 if (this.idleTimer > 2000) {
                     this.playAnimation(this.IMAGES_LONG_IDLE);
+                    if (typeof soundManager !== 'undefined') soundManager.playSnoreSound();
                 } else {
                     this.playAnimation(this.IMAGES_IDLE);
                 }

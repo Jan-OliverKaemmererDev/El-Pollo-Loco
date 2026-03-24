@@ -1,15 +1,16 @@
 let canvas;
 let world;
 let keyboard = new Keyboard();
-
+let soundManager = new SoundManager();
 
 function init(){
     canvas = document.getElementById('canvas');
-    initLevel(); // generate a fresh set of enemies and objects
+    initLevel();
     world = new World(canvas, keyboard);
 
-    
-    console.log('My character is', world.character);
+    soundManager.playBackgroundMusic();
+    soundManager.playChickenSound();
+    soundManager.playSmallChickenSound();
 }
 
 window.addEventListener('keydown', (event) => {

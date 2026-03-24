@@ -46,6 +46,11 @@ function goHome() {
     window.clearInterval(i);
   }
   
+  // Pause background music
+  if (typeof soundManager !== "undefined") {
+    soundManager.pauseBackgroundMusic();
+  }
+  
   // Hide the Game Over or Win screen and show the start screen
   document.getElementById("game-over-screen").classList.add("hidden");
   document.getElementById("win-screen").classList.add("hidden");

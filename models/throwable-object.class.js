@@ -31,6 +31,11 @@ class ThrowableObject extends MoveableObject {
     throw(){
         this.speedY = 30;
         this.applyGravity();
+        
+        if (typeof soundManager !== 'undefined') {
+            soundManager.playBottleThrowSound();
+        }
+
         this.moveInterval = setInterval(() => {
             if (!this.isSplashed) {
                 this.x += 10;
@@ -52,6 +57,12 @@ class ThrowableObject extends MoveableObject {
     splash() {
         this.isSplashed = true;
         this.speedY = 0;
+        
+        if (typeof soundManager !== 'undefined') {
+            soundManager.stopBottleThrowSound();
+            soundManager.playBottleShatterSound();
+        }
+
         setTimeout(() => {
             clearInterval(this.moveInterval);
         }, 100);
