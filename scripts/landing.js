@@ -11,6 +11,12 @@ function startGame() {
  */
 function showGameOver() {
   document.getElementById("game-over-screen").classList.remove("hidden");
+  if (typeof soundManager !== 'undefined') {
+    soundManager.pauseBackgroundMusic();
+    soundManager.stopChickenSound();
+    soundManager.stopSmallChickenSound();
+    soundManager.playGameOverSound();
+  }
 }
 
 /**
@@ -18,6 +24,10 @@ function showGameOver() {
  */
 function showWin() {
   document.getElementById("win-screen").classList.remove("hidden");
+  if (typeof soundManager !== 'undefined') {
+    soundManager.pauseBackgroundMusic();
+    soundManager.playWinSound();
+  }
 }
 
 /**

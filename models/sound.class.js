@@ -5,6 +5,11 @@ class SoundManager {
   chickenSound = new Audio("audio/chicken-sound.mp3");
   smallChickenSound = new Audio("audio/chicken-small-sound.mp3");
   snoreSound = new Audio("audio/snore-sound.mp3");
+  smashSound = new Audio("audio/smash-sound.mp3");
+  coinCollectSound = new Audio("audio/coin-collect.mp3");
+  winSound = new Audio("audio/win-sound.mp3");
+  gameOverSound = new Audio("audio/game-over-sound.mp3");
+  ouchSound = new Audio("audio/ouch-sound.mp3");
 
   constructor() {
     this.backgroundMusic.loop = true;
@@ -12,6 +17,31 @@ class SoundManager {
     this.chickenSound.loop = true;
     this.smallChickenSound.loop = true;
     this.snoreSound.loop = true;
+  }
+
+  playOuchSound() {
+    this.ouchSound.currentTime = 0; 
+    this.ouchSound.play().catch((e) => console.warn(e));
+  }
+
+  playWinSound() {
+    this.winSound.currentTime = 0;
+    this.winSound.play().catch((e) => console.warn(e));
+  }
+
+  playGameOverSound() {
+    this.gameOverSound.currentTime = 0;
+    this.gameOverSound.play().catch((e) => console.warn(e));
+  }
+
+  playCoinCollectSound() {
+    this.coinCollectSound.currentTime = 0; 
+    this.coinCollectSound.play().catch((e) => console.warn(e));
+  }
+
+  playSmashSound() {
+    this.smashSound.currentTime = 0; 
+    this.smashSound.play().catch((e) => console.warn(e));
   }
 
   playSnoreSound() {

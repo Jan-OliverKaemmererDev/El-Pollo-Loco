@@ -37,6 +37,7 @@ class World {
       this.checkBottleHitsEnemy();
       this.checkBottleHitsGround();
       this.checkBossVisibility();
+      this.checkCoinCollisions();
     }, 1000 / 60);
   }
 
@@ -112,6 +113,7 @@ class World {
       } else if (this.character.isColliding(item) && item instanceof Coin) {
         this.level.collectableObjects.splice(index, 1);
         let newPercentage = this.coinBar.percentage + 2; // Each coin gives a little percentage
+        if (typeof soundManager !== 'undefined') soundManager.playCoinCollectSound();
         if (newPercentage > 100) newPercentage = 100;
         this.coinBar.setPercentage(newPercentage);
       } else if (this.character.isColliding(item) && item instanceof HealthHeart && this.character.energy < 100) {

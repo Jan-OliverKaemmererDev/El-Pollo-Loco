@@ -64,6 +64,8 @@ class Chicken extends MoveableObject {
     this.isDead = true;
     this.loadImage("img/3_enemies_chicken/chicken_normal/2_dead/dead.png");
 
+    if (typeof soundManager !== 'undefined') soundManager.playSmashSound();
+
     if (this.world) {
       let livingChickens = this.world.level.enemies.filter(
         (e) => e instanceof Chicken && !(e instanceof SmallChicken) && !e.isDead

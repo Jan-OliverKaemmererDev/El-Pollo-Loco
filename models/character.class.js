@@ -92,6 +92,14 @@ class Character extends MoveableObject {
 
     isDeadAnimationTriggered = false;
 
+    hit(damage) {
+        super.hit(damage);
+
+        if (typeof soundManager !== 'undefined' && !this.isDead()) {
+            soundManager.playOuchSound();
+        }
+    }
+
     animate() {
         setInterval(() => {
             if (!this.isDead() && !this.world.isEndbossDead()) {
