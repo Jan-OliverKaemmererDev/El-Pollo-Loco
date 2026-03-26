@@ -42,8 +42,13 @@ class World {
   }
 
   checkBossVisibility() {
-    if (this.character.x > 2300) {
+    if (this.character.x > 2300 && !this.bossVisible) {
       this.bossVisible = true;
+      
+      if (typeof soundManager !== 'undefined') {
+        soundManager.playEndbossGrowlSound();
+        soundManager.playEndbossChickenSound();
+      }
     }
   }
 
@@ -51,11 +56,14 @@ class World {
     if (
       this.keyboard.D &&
       !this.throwCooldown &&
-      this.bottleBar.percentage > 0
+      this.bottleBar.percentage > 0 &&
+      !this.isEndbossDead()
     ) {
+      let xOffset = this.character.otherDirection ? 0 : 100;
       let bottle = new ThrowableObject(
-        this.character.x + 100,
+        this.character.x + xOffset,
         this.character.y + 100,
+        this.character.otherDirection
       );
       this.throwableObjects.push(bottle);
       this.bottleBar.setPercentage(this.bottleBar.percentage - 10);
@@ -89,7 +97,12 @@ class World {
               }
             }
           }, 200);
-        } else if (!enemy.isDead && !this.character.isHurt() && !this.isEndbossDead()) {
+        } else if (
+          !enemy.isDead &&
+          !this.character.isHurt() &&
+          !this.character.isRecentBounce() &&
+          !this.isEndbossDead()
+        ) {
           // Normaler Treffer
           if (enemy instanceof Endboss) {
             this.character.hit(10);

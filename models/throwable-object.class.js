@@ -17,12 +17,13 @@ class ThrowableObject extends MoveableObject {
 
     isSplashed = false;
 
-    constructor(x, y){
+    constructor(x, y, direction){
         super().loadImage('img/6_salsa_bottle/salsa_bottle.png');
         this.loadImages(this.IMAGES_ROTATION);
         this.loadImages(this.IMAGES_SPLASH);
         this.x = x;
         this.y = y;
+        this.otherDirection = direction;
         this.height = 60;
         this.width = 50;
         this.throw();
@@ -38,7 +39,11 @@ class ThrowableObject extends MoveableObject {
 
         this.moveInterval = setInterval(() => {
             if (!this.isSplashed) {
-                this.x += 10;
+                if (this.otherDirection) {
+                    this.x -= 10;
+                } else {
+                    this.x += 10;
+                }
             }
         }, 25);
         this.animate();

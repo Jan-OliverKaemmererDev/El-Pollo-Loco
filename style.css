@@ -45,6 +45,80 @@ canvas {
   height: 100%;
 }
 
+/* ===================== HOVER BAR ===================== */
+
+#hover-bar {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 15px;
+  padding: 10px 20px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 20;
+}
+
+#game-container:hover #hover-bar {
+  opacity: 1;
+  visibility: visible;
+}
+
+#hover-bar button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+#hover-bar button:hover {
+  background: rgba(245, 166, 35, 0.3);
+  transform: scale(1.1);
+}
+
+#hover-bar button svg {
+  fill: #fff;
+  width: 24px;
+  height: 24px;
+  transition: fill 0.2s ease;
+}
+
+#hover-bar button:hover svg {
+  fill: #f5a623;
+}
+
+/* Mute Toggle Specifics */
+#btn-mute-music .muted-icon,
+#btn-mute-sounds .muted-icon {
+  display: none;
+}
+
+#btn-mute-music.muted .unmuted-icon,
+#btn-mute-sounds.muted .unmuted-icon {
+  display: none;
+}
+
+#btn-mute-music.muted .muted-icon,
+#btn-mute-sounds.muted .muted-icon {
+  display: block;
+}
+
+#btn-mute-music.muted svg,
+#btn-mute-sounds.muted svg {
+  fill: #ff4757;
+}
+
 /* ===================== GAME OVER SCREEN ===================== */
 
 #game-over-screen {

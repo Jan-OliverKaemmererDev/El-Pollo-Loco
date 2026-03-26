@@ -8,6 +8,7 @@ function init(){
     initLevel();
     world = new World(canvas, keyboard);
 
+    syncMuteButtons();
     soundManager.playBackgroundMusic();
     soundManager.playChickenSound();
     soundManager.playSmallChickenSound();
@@ -64,3 +65,65 @@ window.addEventListener('keyup', (event) => {
         keyboard.D = false;
     }
 });
+
+function toggleMusic() {
+  soundManager.isMusicMuted = !soundManager.isMusicMuted;
+  localStorage.setItem("isMusicMuted", soundManager.isMusicMuted);
+  syncMuteButtons();
+  if (soundManager.isMusicMuted) {
+    soundManager.pauseBackgroundMusic();
+  } else {
+    soundManager.playBackgroundMusic();
+  }
+}
+
+function toggleSounds() {
+  soundManager.isSoundsMuted = !soundManager.isSoundsMuted;
+  localStorage.setItem("isSoundsMuted", soundManager.isSoundsMuted);
+  syncMuteButtons();
+  if (soundManager.isSoundsMuted) {
+    soundManager.stopChickenSound();
+    soundManager.stopSmallChickenSound();
+    soundManager.stopEndbossChickenSound();
+    soundManager.stopSnoreSound();
+  } else {
+    if (world && world.level && world.level.enemies) {
+      if (world.level.enemies.some((e) => e instanceof Chicken && !e.isDead)) {
+        soundManager.playChickenSound();
+      }
+      if (
+        world.level.enemies.some((e) => e instanceof SmallChicken && !e.isDead)
+      ) {
+        soundManager.playSmallChickenSound();
+      }
+      if (world.bossVisible) {
+        let endboss = world.level.enemies.find((e) => e instanceof Endboss);
+        if (endboss && !endboss.isDead) {
+          soundManager.playEndbossChickenSound();
+        }
+      }
+    }
+  }
+}
+
+function syncMuteButtons() {
+  const musicBtn = document.getElementById("btn-mute-music");
+  const soundsBtn = document.getElementById("btn-mute-sounds");
+  if (musicBtn) {
+    if (soundManager.isMusicMuted) {
+      musicBtn.classList.add("muted");
+    } else {
+      musicBtn.classList.remove("muted");
+    }
+  }
+  if (soundsBtn) {
+    if (soundManager.isSoundsMuted) {
+      soundsBtn.classList.add("muted");
+    } else {
+      soundsBtn.classList.remove("muted");
+    }
+  }
+}
+
+// Initial sync on page load (before startGame)
+document.addEventListener("DOMContentLoaded", syncMuteButtons);

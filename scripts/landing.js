@@ -15,6 +15,7 @@ function showGameOver() {
     soundManager.pauseBackgroundMusic();
     soundManager.stopChickenSound();
     soundManager.stopSmallChickenSound();
+    soundManager.stopEndbossChickenSound();
     soundManager.playGameOverSound();
   }
 }
@@ -26,6 +27,7 @@ function showWin() {
   document.getElementById("win-screen").classList.remove("hidden");
   if (typeof soundManager !== 'undefined') {
     soundManager.pauseBackgroundMusic();
+    soundManager.stopEndbossChickenSound();
     soundManager.playWinSound();
   }
 }
@@ -34,9 +36,12 @@ function showWin() {
  * Restarts the game by clearing all intervals and initializing a new world.
  */
 function restartGame() {
-  // Clear all running intervals to stop the current game loop cleanly
   for (let i = 1; i < 9999; i++) {
     window.clearInterval(i);
+  }
+  
+  if (typeof soundManager !== "undefined") {
+    soundManager.stopAllGameplaySounds();
   }
   
   // Hide the Game Over and Win screens
@@ -59,6 +64,7 @@ function goHome() {
   // Pause background music
   if (typeof soundManager !== "undefined") {
     soundManager.pauseBackgroundMusic();
+    soundManager.stopAllGameplaySounds();
   }
   
   // Hide the Game Over or Win screen and show the start screen

@@ -14,8 +14,8 @@ class BottleBar extends StatusBar {
         this.loadImages(this.IMAGES);
         this.x = 50;
         this.y = 80;
-        this.width = 250;
-        this.height = 56;
+        this.width = 220;
+        this.height = 45;
         this.setPercentage(0);
     }
 }

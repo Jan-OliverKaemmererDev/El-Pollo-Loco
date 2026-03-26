@@ -110,6 +110,16 @@ class Endboss extends MoveableObject {
     }
   }
 
+  hit(damage) {
+    super.hit(damage);
+
+    if (this.energy === 0) {
+      if (typeof soundManager !== 'undefined') {
+        soundManager.stopEndbossChickenSound();
+      }
+    }
+  }
+
   playStates() {
     if (this.isDead) {
       if (this.currentImage < this.IMAGES_DEAD.length) {

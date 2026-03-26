@@ -91,6 +91,7 @@ class Character extends MoveableObject {
     }
 
     isDeadAnimationTriggered = false;
+    lastBounce = 0;
 
     hit(damage) {
         super.hit(damage);
@@ -117,6 +118,10 @@ class Character extends MoveableObject {
 
                 if (this.world.keyboard.SPACE && !this.isAboveGround()) {
                     this.jump();
+                    this.idleTimer = 0;
+                }
+
+                if (this.world.keyboard.D) {
                     this.idleTimer = 0;
                 }
             }
@@ -182,7 +187,13 @@ class Character extends MoveableObject {
     }
 
     bounce() {
-        this.speedY = 10;
+        this.speedY = 20;
         this.idleTimer = 0;
+        this.lastBounce = new Date().getTime();
+    }
+
+    isRecentBounce() {
+        let timePassed = new Date().getTime() - this.lastBounce;
+        return timePassed < 200;
     }
 }
