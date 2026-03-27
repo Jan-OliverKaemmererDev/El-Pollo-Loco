@@ -77,6 +77,7 @@ class Character extends MoveableObject {
 
     world;
     idleTimer = 0;
+    wasAboveGround = false;
 
     constructor(){
         super().loadImage('img/2_character_pepe/2_walk/W-21.png');
@@ -130,6 +131,12 @@ class Character extends MoveableObject {
                 if (typeof soundManager !== 'undefined') soundManager.stopSnoreSound();
             }
 
+            // Check for landing
+            if (!this.isAboveGround() && this.wasAboveGround) {
+                if (typeof soundManager !== 'undefined') soundManager.playLandingSound();
+            }
+            this.wasAboveGround = this.isAboveGround();
+
             this.world.camera_x = -this.x + 100;
         }, 1000 / 60);
 
@@ -153,6 +160,7 @@ class Character extends MoveableObject {
             if (this.isDead()) {
                 if (!this.isDeadAnimationTriggered) {
                     this.isDeadAnimationTriggered = true;
+                    if (typeof soundManager !== 'undefined') soundManager.playDeathScreamSound();
                     this.currentImage = 0;
                     setTimeout(() => {
                         this.world.showGameOverScreen();
@@ -184,6 +192,7 @@ class Character extends MoveableObject {
     jump() {
         this.speedY = 30;
         this.idleTimer = 0;
+        if (typeof soundManager !== 'undefined') soundManager.playJumpSound();
     }
 
     bounce() {

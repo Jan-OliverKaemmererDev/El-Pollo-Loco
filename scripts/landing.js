@@ -3,6 +3,14 @@
  */
 function startGame() {
   document.getElementById("start-screen").classList.add("hidden");
+  
+  // Enable hover bar buttons
+  const buttonsToEnable = ["btn-restart-hover", "btn-mute-music", "btn-mute-sounds"];
+  buttonsToEnable.forEach(id => {
+    const btn = document.getElementById(id);
+    if (btn) btn.classList.remove("disabled");
+  });
+
   init();
 }
 
@@ -48,6 +56,13 @@ function restartGame() {
   document.getElementById("game-over-screen").classList.add("hidden");
   document.getElementById("win-screen").classList.add("hidden");
   
+  // Enable hover bar buttons
+  const buttonsToEnable = ["btn-restart-hover", "btn-mute-music", "btn-mute-sounds"];
+  buttonsToEnable.forEach(id => {
+    const btn = document.getElementById(id);
+    if (btn) btn.classList.remove("disabled");
+  });
+
   // Start a fresh game
   init();
 }
@@ -70,6 +85,20 @@ function goHome() {
   // Hide the Game Over or Win screen and show the start screen
   document.getElementById("game-over-screen").classList.add("hidden");
   document.getElementById("win-screen").classList.add("hidden");
+  
+  // Hide mobile controls when returning home
+  const mobileControls = document.getElementById("mobile-controls");
+  if (mobileControls) {
+    mobileControls.classList.add("hidden");
+  }
+
+  // Disable hover bar buttons when home
+  const buttonsToDisable = ["btn-restart-hover", "btn-mute-music", "btn-mute-sounds"];
+  buttonsToDisable.forEach(id => {
+    const btn = document.getElementById(id);
+    if (btn) btn.classList.add("disabled");
+  });
+
   document.getElementById("start-screen").classList.remove("hidden");
 }
 

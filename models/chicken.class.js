@@ -38,10 +38,10 @@ class Chicken extends MoveableObject {
         if (this.isColliding(this.world.character)) {
           return;
         }
-        if (this.x > this.world.character.x) {
+        if (this.x > this.world.character.x + 10) {
           this.moveLeft();
           this.otherDirection = false;
-        } else {
+        } else if (this.x < this.world.character.x - 10) {
           this.moveRight();
           this.otherDirection = true;
         }

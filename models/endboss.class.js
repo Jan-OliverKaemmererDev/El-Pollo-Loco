@@ -4,10 +4,10 @@ class Endboss extends MoveableObject {
   y = 100;
 
   offset = {
-    top: 150,
-    bottom: 50,
-    left: 100,
-    right: 100
+    top: 50,
+    bottom: 40,
+    left: 40,
+    right: 40
   };
 
   IMAGES_WALKING = [
@@ -96,13 +96,19 @@ class Endboss extends MoveableObject {
   }
 
   moveTowardsCharacter() {
-    if (this.hadFirstContact && !this.isDead && !this.isAlert && !this.isHurt && (!this.world || !this.world.character.isDead())) {
+    if (
+      this.hadFirstContact &&
+      !this.isDead &&
+      !this.isAlert &&
+      !this.isHurt &&
+      !this.isAttacking &&
+      (!this.world || !this.world.character.isDead())
+    ) {
       if (!this.isColliding(this.world.character)) {
-        // The Endboss should walk towards the character
-        if (this.world && this.x > this.world.character.x) {
+        if (this.world && this.x > this.world.character.x + 0.5) {
           this.moveLeft();
           this.otherDirection = false;
-        } else {
+        } else if (this.world && this.x < this.world.character.x - 0.5) {
           this.moveRight();
           this.otherDirection = true;
         }

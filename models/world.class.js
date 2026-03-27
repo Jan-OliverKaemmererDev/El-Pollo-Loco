@@ -37,7 +37,6 @@ class World {
       this.checkBottleHitsEnemy();
       this.checkBottleHitsGround();
       this.checkBossVisibility();
-      this.checkCoinCollisions();
     }, 1000 / 60);
   }
 

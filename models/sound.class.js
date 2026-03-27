@@ -12,6 +12,9 @@ class SoundManager {
   ouchSound = new Audio("audio/ouch-sound.mp3");
   endbossGrowlSound = new Audio("audio/endboss-growl.mp3");
   endbossChickenSound = new Audio("audio/endboss-chicken-sound.mp3");
+  jumpSound = new Audio("audio/jump.mp3");
+  landingSound = new Audio("audio/landing.mp3");
+  deathScreamSound = new Audio("audio/death-scream.mp3");
   
   isMusicMuted = false;
   isSoundsMuted = false;
@@ -133,6 +136,24 @@ class SoundManager {
     if (this.isSoundsMuted) return;
     this.bottleShatterSound.currentTime = 0;
     this.bottleShatterSound.play().catch((e) => console.warn(e));
+  }
+
+  playJumpSound() {
+    if (this.isSoundsMuted) return;
+    this.jumpSound.currentTime = 0;
+    this.jumpSound.play().catch((e) => console.warn(e));
+  }
+
+  playLandingSound() {
+    if (this.isSoundsMuted) return;
+    this.landingSound.currentTime = 0;
+    this.landingSound.play().catch((e) => console.warn(e));
+  }
+
+  playDeathScreamSound() {
+    if (this.isSoundsMuted) return;
+    this.deathScreamSound.currentTime = 0;
+    this.deathScreamSound.play().catch((e) => console.warn(e));
   }
 
   stopAllGameplaySounds() {
