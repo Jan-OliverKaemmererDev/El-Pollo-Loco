@@ -245,7 +245,7 @@ class Character extends MoveableObject {
      * Makes the character bounce after stomping on an enemy.
      */
     bounce() {
-        this.speedY = 20;
+        this.speedY = 15;
         this.idleTimer = 0;
         this.lastBounce = new Date().getTime();
     }
