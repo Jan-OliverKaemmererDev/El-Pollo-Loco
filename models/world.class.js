@@ -86,7 +86,7 @@ class World extends CollisionHandler {
     this.throwCooldown = true;
     setTimeout(() => {
       this.throwCooldown = false;
-    }, 500);
+    }, 2000);
   }
 
   /**
@@ -203,17 +203,11 @@ class World extends CollisionHandler {
   }
 
   /**
-   * Checks if all enemies are defeated and shows the win screen if so.
+   * Checks if the Endboss is dead and shows the win screen if so.
    */
   checkWinCondition() {
     if (this.isWon) return;
-    const endbossDead = this.isEndbossDead();
-    const chickensRemaining = this.level.enemies.some(
-      (enemy) =>
-        (enemy instanceof Chicken || enemy instanceof SmallChicken) &&
-        !enemy.isDead
-    );
-    if (endbossDead && !chickensRemaining) {
+    if (this.isEndbossDead()) {
       this.isWon = true;
       setTimeout(() => {
         showWin();

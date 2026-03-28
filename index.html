@@ -1,6 +1,5 @@
 <!doctype html>
-<html lang="en">
-  <html translate="no">
+<html lang="en" translate="no">
     <head>
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -38,6 +37,19 @@
 
     <body>
       <h1>El Pollo Loco</h1>
+
+      <div id="rotate-device-overlay">
+        <div class="rotate-content">
+          <div class="phone-icon">
+            <svg viewBox="0 0 24 24" width="60" height="60">
+              <path
+                d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"
+              />
+            </svg>
+          </div>
+          <p>Please rotate your device to landscape mode!</p>
+        </div>
+      </div>
 
       <div class="main-content-wrapper">
         <div id="game-container">
@@ -107,16 +119,7 @@
           </div>
         </div>
 
-        <div id="rotate-device-overlay">
-          <div class="rotate-content">
-            <div class="phone-icon">
-              <svg viewBox="0 0 24 24" width="60" height="60">
-                <path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/>
-              </svg>
-            </div>
-            <p>Please rotate your device to landscape mode!</p>
-          </div>
-        </div>
+
 
         <div id="mobile-controls" class="hidden">
           <div class="mobile-left">
@@ -221,10 +224,6 @@
               <div class="control-item">
                 <span class="key">→</span>
                 <span class="control-label">Move Right</span>
-              </div>
-              <div class="control-item">
-                <span class="key">↑</span>
-                <span class="control-label">Jump</span>
               </div>
               <div class="control-item">
                 <span class="key space">SPACE</span>
@@ -334,5 +333,4 @@
         </div>
       </div>
     </body>
-  </html>
 </html>

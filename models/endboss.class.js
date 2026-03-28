@@ -62,7 +62,7 @@ class Endboss extends MoveableObject {
   isAlert = false;
   isHurt = false;
   isAttacking = false;
-  speed = 1.5;
+  speed = 3.5;
 
   /**
    * Creates a new Endboss instance, loads all image sets, and starts animations.
@@ -75,6 +75,7 @@ class Endboss extends MoveableObject {
     this.loadImages(this.IMAGES_HURT);
     this.loadImages(this.IMAGES_DEAD);
     this.x = 2900;
+    this.applyGravity();
     this.animate();
   }
 
@@ -113,7 +114,6 @@ class Endboss extends MoveableObject {
       !this.isDead &&
       !this.isAlert &&
       !this.isHurt &&
-      !this.isAttacking &&
       (!this.world || !this.world.character.isDead())
     );
   }
@@ -191,11 +191,30 @@ class Endboss extends MoveableObject {
   triggerRandomAttack() {
     if (!this.canTriggerAttack()) return;
     if (Math.random() < 0.4) {
-      this.isAttacking = true;
-      setTimeout(() => {
-        this.isAttacking = false;
-      }, 1000);
+      this.leap();
     }
+  }
+
+  /**
+   * Performs a leaping attack movement towards the character.
+   */
+  leap() {
+    this.isAttacking = true;
+    this.speedY = 15;
+    let originalSpeed = this.speed;
+    this.speed = 15;
+    setTimeout(() => {
+      this.isAttacking = false;
+      this.speed = originalSpeed;
+    }, 1000);
+  }
+
+  /**
+   * Returns the ground level for the Endboss.
+   * @returns {number} The y-coordinate of the Endboss ground.
+   */
+  getGroundLevel() {
+    return 100;
   }
 
   /**

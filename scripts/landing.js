@@ -35,7 +35,7 @@ function showWin() {
   document.getElementById("win-screen").classList.remove("hidden");
   if (typeof soundManager !== 'undefined') {
     soundManager.pauseBackgroundMusic();
-    soundManager.stopEndbossChickenSound();
+    soundManager.stopAllGameplaySounds();
     soundManager.playWinSound();
   }
 }

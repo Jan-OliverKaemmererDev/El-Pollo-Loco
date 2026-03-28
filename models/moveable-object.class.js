@@ -17,7 +17,7 @@ class MoveableObject extends DrawableObject {
   };
 
   /**
-   * Applies gravity to the object, pulling it down over time.
+   * Applies gravity to the object, pulling it down over time until it hits its ground level.
    */
   applyGravity() {
     setInterval(() => {
@@ -26,17 +26,26 @@ class MoveableObject extends DrawableObject {
         this.speedY -= this.acceleration;
       } else {
         this.speedY = 0;
-        this.y = this instanceof ThrowableObject ? 360 : 250;
+        this.y = this.getGroundLevel();
       }
     }, 1000 / 25);
   }
 
   /**
-   * Checks whether the object is above the ground level.
-   * @returns {boolean} True if the object is above ground.
+   * Determines the ground level for this object.
+   * @returns {number} The y-coordinate where the object should stop falling.
+   */
+  getGroundLevel() {
+    if (this instanceof ThrowableObject) return 360;
+    return 250;
+  }
+
+  /**
+   * Checks whether the object is above its ground level.
+   * @returns {boolean} True if the object is in the air.
    */
   isAboveGround() {
-    return this instanceof ThrowableObject ? this.y < 360 : this.y < 250;
+    return this.y < this.getGroundLevel();
   }
 
   /**
