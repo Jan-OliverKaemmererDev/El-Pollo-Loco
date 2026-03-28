@@ -104,7 +104,7 @@ class Character extends MoveableObject {
 
     animate() {
         setInterval(() => {
-            if (!this.isDead() && !this.world.isEndbossDead()) {
+            if (!this.isDead() && !this.world.isWon) {
                 if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
                     this.moveRight();
                     this.otherDirection = false;
@@ -142,7 +142,7 @@ class Character extends MoveableObject {
 
         // Walking and Hurt animation (100ms)
         setInterval(() => {
-            if (this.isDead() || this.world.isEndbossDead()) return;
+            if (this.isDead() || this.world.isWon) return;
 
             if (this.isHurt()) {
                 this.playAnimation(this.IMAGES_HURT);
@@ -172,7 +172,7 @@ class Character extends MoveableObject {
                 } else {
                     this.loadImage(this.IMAGES_DEAD[this.IMAGES_DEAD.length - 1]);
                 }
-            } else if (this.world.isEndbossDead()) {
+            } else if (this.world.isWon) {
                 return;
             } else if (this.isAboveGround() && !this.isHurt()) {
                 this.playAnimation(this.IMAGES_JUMPING);

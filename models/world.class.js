@@ -12,6 +12,7 @@ class World {
   bossVisible = false;
   throwableObjects = [];
   throwCooldown = false;
+  isWon = false;
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
@@ -56,7 +57,7 @@ class World {
       this.keyboard.D &&
       !this.throwCooldown &&
       this.bottleBar.percentage > 0 &&
-      !this.isEndbossDead()
+      !this.isWon
     ) {
       let xOffset = this.character.otherDirection ? 0 : 100;
       let bottle = new ThrowableObject(
@@ -100,7 +101,7 @@ class World {
           !enemy.isDead &&
           !this.character.isHurt() &&
           !this.character.isRecentBounce() &&
-          !this.isEndbossDead()
+          !this.isWon
         ) {
           // Normaler Treffer
           if (enemy instanceof Endboss) {
@@ -110,6 +111,7 @@ class World {
           }
           this.statusBar.setPercentage(this.character.energy);
         }
+        this.checkWinCondition();
       }
     });
   }
@@ -171,10 +173,8 @@ class World {
             }, 300);
             if (enemy.energy == 0) {
               enemy.die();
-              setTimeout(() => {
-                showWin();
-              }, 500);
             }
+            this.checkWinCondition();
           }
         }
       });
@@ -265,8 +265,27 @@ class World {
   }
 
   isEndbossDead() {
-    let endboss = this.level.enemies.find(e => e instanceof Endboss);
+    let endboss = this.level.enemies.find((e) => e instanceof Endboss);
     return endboss ? endboss.isDead : false;
+  }
+
+  /**
+   * Checks if all enemies are defeated and shows the win screen if so.
+   */
+  checkWinCondition() {
+    if (this.isWon) return;
+
+    const endbossDead = this.isEndbossDead();
+    const chickensRemaining = this.level.enemies.some(
+      (enemy) => (enemy instanceof Chicken || enemy instanceof SmallChicken) && !enemy.isDead
+    );
+
+    if (endbossDead && !chickensRemaining) {
+      this.isWon = true;
+      setTimeout(() => {
+        showWin();
+      }, 500);
+    }
   }
 }
 

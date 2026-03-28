@@ -140,3 +140,18 @@ function toggleFullscreen() {
     document.exitFullscreen();
   }
 }
+
+/**
+ * Updates the fullscreen icon based on whether the document is in fullscreen mode.
+ */
+function updateFullscreenIcon() {
+  const icon = document.getElementById("fullscreen-icon");
+  if (document.fullscreenElement) {
+    icon.src = "img/exit_fullscreen.svg";
+  } else {
+    icon.src = "img/fullscreen.svg";
+  }
+}
+
+// Update icon when fullscreen state changes (e.g., via ESC key)
+document.addEventListener("fullscreenchange", updateFullscreenIcon);

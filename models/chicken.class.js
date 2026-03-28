@@ -33,7 +33,7 @@ class Chicken extends MoveableObject {
         !this.isDead &&
         this.world &&
         !this.world.character.isDead() &&
-        !this.world.isEndbossDead()
+        !this.world.isWon
       ) {
         if (this.isColliding(this.world.character)) {
           return;
@@ -53,7 +53,7 @@ class Chicken extends MoveableObject {
         !this.isDead &&
         this.world &&
         !this.world.character.isDead() &&
-        !this.world.isEndbossDead()
+        !this.world.isWon
       ) {
         this.playAnimation(this.IMAGES_WALKING);
       }
