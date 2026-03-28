@@ -1,3 +1,8 @@
+/**
+ * Represents the Endboss enemy chicken.
+ * Handles AI behavior, attack patterns, and boss-specific animations.
+ * @extends MoveableObject
+ */
 class Endboss extends MoveableObject {
   height = 350;
   width = 280;
@@ -7,7 +12,7 @@ class Endboss extends MoveableObject {
     top: 50,
     bottom: 40,
     left: 40,
-    right: 40
+    right: 40,
   };
 
   IMAGES_WALKING = [
@@ -25,7 +30,7 @@ class Endboss extends MoveableObject {
     "img/4_enemie_boss_chicken/2_alert/G9.png",
     "img/4_enemie_boss_chicken/2_alert/G10.png",
     "img/4_enemie_boss_chicken/2_alert/G11.png",
-    "img/4_enemie_boss_chicken/2_alert/G12.png"
+    "img/4_enemie_boss_chicken/2_alert/G12.png",
   ];
 
   IMAGES_ATTACK = [
@@ -36,19 +41,19 @@ class Endboss extends MoveableObject {
     "img/4_enemie_boss_chicken/3_attack/G17.png",
     "img/4_enemie_boss_chicken/3_attack/G18.png",
     "img/4_enemie_boss_chicken/3_attack/G19.png",
-    "img/4_enemie_boss_chicken/3_attack/G20.png"
+    "img/4_enemie_boss_chicken/3_attack/G20.png",
   ];
 
   IMAGES_HURT = [
     "img/4_enemie_boss_chicken/4_hurt/G21.png",
     "img/4_enemie_boss_chicken/4_hurt/G22.png",
-    "img/4_enemie_boss_chicken/4_hurt/G23.png"
+    "img/4_enemie_boss_chicken/4_hurt/G23.png",
   ];
 
   IMAGES_DEAD = [
     "img/4_enemie_boss_chicken/5_dead/G24.png",
     "img/4_enemie_boss_chicken/5_dead/G25.png",
-    "img/4_enemie_boss_chicken/5_dead/G26.png"
+    "img/4_enemie_boss_chicken/5_dead/G26.png",
   ];
 
   energy = 100;
@@ -59,6 +64,9 @@ class Endboss extends MoveableObject {
   isAttacking = false;
   speed = 1.5;
 
+  /**
+   * Creates a new Endboss instance, loads all image sets, and starts animations.
+   */
   constructor() {
     super().loadImage(this.IMAGES_ALERT[0]);
     this.loadImages(this.IMAGES_WALKING);
@@ -70,70 +78,101 @@ class Endboss extends MoveableObject {
     this.animate();
   }
 
+  /**
+   * Initializes all animation and behavior intervals.
+   */
   animate() {
     setInterval(() => {
       this.checkFirstContact();
       this.moveTowardsCharacter();
     }, 1000 / 60);
-
-    setInterval(() => {
-      this.playStates();
-    }, 200);
-
-    setInterval(() => {
-      this.triggerRandomAttack();
-    }, 2500); 
+    setInterval(() => this.playStates(), 200);
+    setInterval(() => this.triggerRandomAttack(), 2500);
   }
 
+  /**
+   * Checks if the character has reached the boss zone and triggers the alert state.
+   */
   checkFirstContact() {
     if (!this.hadFirstContact && this.world && this.world.character.x > 2300) {
       this.hadFirstContact = true;
       this.isAlert = true;
       setTimeout(() => {
         this.isAlert = false;
-      }, 1500); // Alert state lasts 1.5s
+      }, 1500);
     }
   }
 
-  moveTowardsCharacter() {
-    if (
+  /**
+   * Checks whether the Endboss is allowed to move.
+   * @returns {boolean} True if the Endboss can move towards the character.
+   */
+  canMove() {
+    return (
       this.hadFirstContact &&
       !this.isDead &&
       !this.isAlert &&
       !this.isHurt &&
       !this.isAttacking &&
       (!this.world || !this.world.character.isDead())
-    ) {
-      if (!this.isColliding(this.world.character)) {
-        if (this.world && this.x > this.world.character.x + 0.5) {
-          this.moveLeft();
-          this.otherDirection = false;
-        } else if (this.world && this.x < this.world.character.x - 0.5) {
-          this.moveRight();
-          this.otherDirection = true;
-        }
-      }
+    );
+  }
+
+  /**
+   * Moves the Endboss towards the character if conditions are met.
+   */
+  moveTowardsCharacter() {
+    if (!this.canMove()) return;
+    if (this.isColliding(this.world.character)) return;
+    if (this.world && this.x > this.world.character.x + 0.5) {
+      this.moveLeft();
+      this.otherDirection = false;
+    } else if (this.world && this.x < this.world.character.x - 0.5) {
+      this.moveRight();
+      this.otherDirection = true;
     }
   }
 
+  /**
+   * Applies damage to the Endboss and stops its ambient sound when energy reaches zero.
+   * @param {number} damage - The amount of damage to apply.
+   */
   hit(damage) {
     super.hit(damage);
-
     if (this.energy === 0) {
-      if (typeof soundManager !== 'undefined') {
+      if (typeof soundManager !== "undefined") {
         soundManager.stopEndbossChickenSound();
       }
     }
   }
 
+  /**
+   * Plays the correct animation based on the current state of the Endboss.
+   */
   playStates() {
     if (this.isDead) {
-      if (this.currentImage < this.IMAGES_DEAD.length) {
-        this.playAnimation(this.IMAGES_DEAD);
-      }
+      this.playDeadState();
     } else if (this.world && this.world.character.isDead()) {
-      // Do nothing, freeze like chickens
-    } else if (this.isHurt) {
+      return;
+    } else {
+      this.playAliveState();
+    }
+  }
+
+  /**
+   * Plays the death animation once and then freezes on the last frame.
+   */
+  playDeadState() {
+    if (this.currentImage < this.IMAGES_DEAD.length) {
+      this.playAnimation(this.IMAGES_DEAD);
+    }
+  }
+
+  /**
+   * Plays the appropriate alive-state animation (hurt, alert, attack, walking, or idle).
+   */
+  playAliveState() {
+    if (this.isHurt) {
       this.playAnimation(this.IMAGES_HURT);
     } else if (this.isAlert) {
       this.playAnimation(this.IMAGES_ALERT);
@@ -142,32 +181,52 @@ class Endboss extends MoveableObject {
     } else if (this.hadFirstContact) {
       this.playAnimation(this.IMAGES_WALKING);
     } else {
-      // Idle before first contact
       this.loadImage(this.IMAGES_ALERT[0]);
     }
   }
 
+  /**
+   * Randomly triggers an attack with a 40% chance every 2.5 seconds.
+   */
   triggerRandomAttack() {
-    if (this.hadFirstContact && !this.isDead && !this.isAlert && !this.isHurt && (!this.world || !this.world.character.isDead())) {
-      if (Math.random() < 0.4) { // 40% chance every 2.5s
-        this.isAttacking = true;
-        setTimeout(() => {
-          this.isAttacking = false;
-        }, 1000);
-      }
+    if (!this.canTriggerAttack()) return;
+    if (Math.random() < 0.4) {
+      this.isAttacking = true;
+      setTimeout(() => {
+        this.isAttacking = false;
+      }, 1000);
     }
   }
 
+  /**
+   * Checks whether the Endboss can initiate a random attack.
+   * @returns {boolean} True if the Endboss is eligible to attack.
+   */
+  canTriggerAttack() {
+    return (
+      this.hadFirstContact &&
+      !this.isDead &&
+      !this.isAlert &&
+      !this.isHurt &&
+      (!this.world || !this.world.character.isDead())
+    );
+  }
+
+  /**
+   * Activates the hurt state for 400ms, playing the hurt animation.
+   */
   playHurt() {
     this.isHurt = true;
     setTimeout(() => {
       this.isHurt = false;
-    }, 400); // Hurt animation duration
+    }, 400);
   }
 
+  /**
+   * Marks the Endboss as dead and resets the animation frame counter.
+   */
   die() {
     this.isDead = true;
     this.currentImage = 0;
   }
 }
-

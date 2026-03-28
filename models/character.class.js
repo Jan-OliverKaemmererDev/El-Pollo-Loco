@@ -1,3 +1,8 @@
+/**
+ * Represents the playable character Pepe.
+ * Handles movement, animations, and player input.
+ * @extends MoveableObject
+ */
 class Character extends MoveableObject {
     height = 180;
     width = 100;
@@ -79,6 +84,9 @@ class Character extends MoveableObject {
     idleTimer = 0;
     wasAboveGround = false;
 
+    /**
+     * Creates a new Character instance, loads all image sets, applies gravity, and starts animations.
+     */
     constructor(){
         super().loadImage('img/2_character_pepe/2_walk/W-21.png');
         this.loadImages(this.IMAGES_WALKING);
@@ -94,6 +102,10 @@ class Character extends MoveableObject {
     isDeadAnimationTriggered = false;
     lastBounce = 0;
 
+    /**
+     * Applies damage to the character and plays a hurt sound effect.
+     * @param {number} damage - The amount of damage to apply.
+     */
     hit(damage) {
         super.hit(damage);
 
@@ -102,105 +114,146 @@ class Character extends MoveableObject {
         }
     }
 
+    /**
+     * Initializes all animation intervals for movement, walking, and state transitions.
+     */
     animate() {
-        setInterval(() => {
-            if (!this.isDead() && !this.world.isWon) {
-                if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
-                    this.moveRight();
-                    this.otherDirection = false;
-                    this.idleTimer = 0;
-                }
-
-                if (this.world.keyboard.LEFT && this.x > -600) {
-                    this.moveLeft();
-                    this.otherDirection = true;
-                    this.idleTimer = 0;
-                }
-
-                if (this.world.keyboard.SPACE && !this.isAboveGround()) {
-                    this.jump();
-                    this.idleTimer = 0;
-                }
-
-                if (this.world.keyboard.D) {
-                    this.idleTimer = 0;
-                }
-            }
-
-            if (this.idleTimer <= 2000) {
-                if (typeof soundManager !== 'undefined') soundManager.stopSnoreSound();
-            }
-
-            // Check for landing
-            if (!this.isAboveGround() && this.wasAboveGround) {
-                if (typeof soundManager !== 'undefined') soundManager.playLandingSound();
-            }
-            this.wasAboveGround = this.isAboveGround();
-
-            this.world.camera_x = -this.x + 100;
-        }, 1000 / 60);
-
-        // Walking and Hurt animation (100ms)
-        setInterval(() => {
-            if (this.isDead() || this.world.isWon) return;
-
-            if (this.isHurt()) {
-                this.playAnimation(this.IMAGES_HURT);
-                this.idleTimer = 0;
-            } else if (!this.isAboveGround()) {
-                if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-                    this.playAnimation(this.IMAGES_WALKING);
-                    this.idleTimer = 0;
-                }
-            }
-        }, 100);
-
-        // Jump, Idle and Death animation (200ms)
-        setInterval(() => {
-            if (this.isDead()) {
-                if (!this.isDeadAnimationTriggered) {
-                    this.isDeadAnimationTriggered = true;
-                    if (typeof soundManager !== 'undefined') soundManager.playDeathScreamSound();
-                    this.currentImage = 0;
-                    setTimeout(() => {
-                        this.world.showGameOverScreen();
-                    }, (this.IMAGES_DEAD.length * 200) + 500);
-                }
-
-                if (this.currentImage < this.IMAGES_DEAD.length) {
-                    this.playAnimation(this.IMAGES_DEAD);
-                } else {
-                    this.loadImage(this.IMAGES_DEAD[this.IMAGES_DEAD.length - 1]);
-                }
-            } else if (this.world.isWon) {
-                return;
-            } else if (this.isAboveGround() && !this.isHurt()) {
-                this.playAnimation(this.IMAGES_JUMPING);
-                this.idleTimer = 0;
-            } else if (!this.isHurt()) {
-                this.idleTimer += 200;
-                if (this.idleTimer > 2000) {
-                    this.playAnimation(this.IMAGES_LONG_IDLE);
-                    if (typeof soundManager !== 'undefined') soundManager.playSnoreSound();
-                } else {
-                    this.playAnimation(this.IMAGES_IDLE);
-                }
-            }
-        }, 200);
+        setInterval(() => this.handleMovementTick(), 1000 / 60);
+        setInterval(() => this.handleWalkingAnimation(), 100);
+        setInterval(() => this.handleStateAnimation(), 200);
     }
 
+    /**
+     * Handles one frame of the movement loop: processes input, stops snoring, checks landing, and updates the camera.
+     */
+    handleMovementTick() {
+        if (!this.isDead() && !this.world.isWon) {
+            this.handleMovement();
+        }
+        if (this.idleTimer <= 2000) {
+            if (typeof soundManager !== 'undefined') soundManager.stopSnoreSound();
+        }
+        this.handleLanding();
+        this.world.camera_x = -this.x + 100;
+    }
+
+    /**
+     * Processes keyboard input to move the character left, right, or jump.
+     */
+    handleMovement() {
+        if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
+            this.moveRight();
+            this.otherDirection = false;
+            this.idleTimer = 0;
+        }
+        if (this.world.keyboard.LEFT && this.x > -600) {
+            this.moveLeft();
+            this.otherDirection = true;
+            this.idleTimer = 0;
+        }
+        if (this.world.keyboard.SPACE && !this.isAboveGround()) {
+            this.jump();
+            this.idleTimer = 0;
+        }
+        if (this.world.keyboard.D) this.idleTimer = 0;
+    }
+
+    /**
+     * Detects when the character lands on the ground and plays the landing sound.
+     */
+    handleLanding() {
+        if (!this.isAboveGround() && this.wasAboveGround) {
+            if (typeof soundManager !== 'undefined') soundManager.playLandingSound();
+        }
+        this.wasAboveGround = this.isAboveGround();
+    }
+
+    /**
+     * Handles the walking and hurt animation cycle (called every 100ms).
+     */
+    handleWalkingAnimation() {
+        if (this.isDead() || this.world.isWon) return;
+        if (this.isHurt()) {
+            this.playAnimation(this.IMAGES_HURT);
+            this.idleTimer = 0;
+        } else if (!this.isAboveGround()) {
+            if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
+                this.playAnimation(this.IMAGES_WALKING);
+                this.idleTimer = 0;
+            }
+        }
+    }
+
+    /**
+     * Dispatches the correct animation state: death, jump, or idle (called every 200ms).
+     */
+    handleStateAnimation() {
+        if (this.isDead()) {
+            this.handleDeathAnimation();
+        } else if (this.world.isWon) {
+            return;
+        } else if (this.isAboveGround() && !this.isHurt()) {
+            this.playAnimation(this.IMAGES_JUMPING);
+            this.idleTimer = 0;
+        } else if (!this.isHurt()) {
+            this.handleIdleAnimation();
+        }
+    }
+
+    /**
+     * Plays the death animation sequence and triggers the game over screen after completion.
+     */
+    handleDeathAnimation() {
+        if (!this.isDeadAnimationTriggered) {
+            this.isDeadAnimationTriggered = true;
+            if (typeof soundManager !== 'undefined') soundManager.playDeathScreamSound();
+            this.currentImage = 0;
+            setTimeout(() => {
+                this.world.showGameOverScreen();
+            }, (this.IMAGES_DEAD.length * 200) + 500);
+        }
+        if (this.currentImage < this.IMAGES_DEAD.length) {
+            this.playAnimation(this.IMAGES_DEAD);
+        } else {
+            this.loadImage(this.IMAGES_DEAD[this.IMAGES_DEAD.length - 1]);
+        }
+    }
+
+    /**
+     * Plays the idle or long idle animation depending on the idle timer duration.
+     */
+    handleIdleAnimation() {
+        this.idleTimer += 200;
+        if (this.idleTimer > 2000) {
+            this.playAnimation(this.IMAGES_LONG_IDLE);
+            if (typeof soundManager !== 'undefined') soundManager.playSnoreSound();
+        } else {
+            this.playAnimation(this.IMAGES_IDLE);
+        }
+    }
+
+    /**
+     * Makes the character jump by setting vertical speed and plays the jump sound.
+     */
     jump() {
         this.speedY = 30;
         this.idleTimer = 0;
         if (typeof soundManager !== 'undefined') soundManager.playJumpSound();
     }
 
+    /**
+     * Makes the character bounce after stomping on an enemy.
+     */
     bounce() {
         this.speedY = 20;
         this.idleTimer = 0;
         this.lastBounce = new Date().getTime();
     }
 
+    /**
+     * Checks if the character has recently bounced off an enemy.
+     * @returns {boolean} True if the last bounce was less than 200ms ago.
+     */
     isRecentBounce() {
         let timePassed = new Date().getTime() - this.lastBounce;
         return timePassed < 200;
