@@ -44,55 +44,65 @@ function showWin() {
  * Restarts the game by clearing all intervals and initializing a new world.
  */
 function restartGame() {
-  for (let i = 1; i < 9999; i++) {
-    window.clearInterval(i);
-  }
+  clearAllGameIntervals();
   
   if (typeof soundManager !== "undefined") {
     soundManager.stopAllGameplaySounds();
   }
   
-  // Hide the Game Over and Win screens
-  document.getElementById("game-over-screen").classList.add("hidden");
-  document.getElementById("win-screen").classList.add("hidden");
-  
-  // Enable hover bar buttons
-  const buttonsToEnable = ["btn-restart-hover", "btn-mute-music", "btn-mute-sounds"];
-  buttonsToEnable.forEach(id => {
-    const btn = document.getElementById(id);
-    if (btn) btn.classList.remove("disabled");
-  });
+  resetGameUI();
 
   // Start a fresh game
   init();
 }
 
 /**
+ * Clears all running intervals to stop the current game loop cleanly.
+ */
+function clearAllGameIntervals() {
+    for (let i = 1; i < 9999; i++) {
+        window.clearInterval(i);
+      }
+}
+
+/**
+ * Hides victory/game over screens and enables hover bar buttons.
+ */
+function resetGameUI() {
+  document.getElementById("game-over-screen").classList.add("hidden");
+  document.getElementById("win-screen").classList.add("hidden");
+  
+  const buttonsToEnable = ["btn-restart-hover", "btn-mute-music", "btn-mute-sounds"];
+  buttonsToEnable.forEach(id => {
+    const btn = document.getElementById(id);
+    if (btn) btn.classList.remove("disabled");
+  });
+}
+
+/**
  * Returns to the Home Screen from the Game Over Screen.
  */
 function goHome() {
-  // Clear all running intervals to stop the current game loop cleanly
-  for (let i = 1; i < 9999; i++) {
-    window.clearInterval(i);
-  }
+  clearAllGameIntervals();
   
-  // Pause background music
   if (typeof soundManager !== "undefined") {
     soundManager.pauseBackgroundMusic();
     soundManager.stopAllGameplaySounds();
   }
   
-  // Hide the Game Over or Win screen and show the start screen
+  resetHomeUI();
+}
+
+/**
+ * Updates the UI elements to show the start screen and hide game-related overlays.
+ */
+function resetHomeUI() {
   document.getElementById("game-over-screen").classList.add("hidden");
   document.getElementById("win-screen").classList.add("hidden");
   
-  // Hide mobile controls when returning home
   const mobileControls = document.getElementById("mobile-controls");
-  if (mobileControls) {
-    mobileControls.classList.add("hidden");
-  }
+  if (mobileControls) mobileControls.classList.add("hidden");
 
-  // Disable hover bar buttons when home
   const buttonsToDisable = ["btn-restart-hover", "btn-mute-music", "btn-mute-sounds"];
   buttonsToDisable.forEach(id => {
     const btn = document.getElementById(id);
