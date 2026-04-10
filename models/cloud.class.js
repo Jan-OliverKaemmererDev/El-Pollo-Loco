@@ -15,15 +15,18 @@ class Cloud extends MoveableObject {
   constructor(imagePath = "img/5_background/layers/4_clouds/1.png", x = Math.random() * 500) {
     super().loadImage(imagePath);
     this.x = x;
-    this.animate();
+    this.movementTimer = 0;
   }
 
   /**
-   * Starts the cloud's continuous leftward movement.
+   * Called every frame from World.gameLoop
+   * @param {number} dt 
    */
-  animate() {
-    setInterval(() => {
+  update(dt) {
+    this.movementTimer += dt;
+    if (this.movementTimer > 1000 / 60) {
       this.moveLeft();
-    }, 1000 / 60);
+      this.movementTimer = 0;
+    }
   }
 }

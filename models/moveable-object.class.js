@@ -9,6 +9,7 @@ class MoveableObject extends DrawableObject {
   acceleration = 2.5;
   energy = 100;
   lastHit = 0;
+  gravityTimer = 0;
   offset = {
     top: 0,
     left: 0,
@@ -17,10 +18,12 @@ class MoveableObject extends DrawableObject {
   };
 
   /**
-   * Applies gravity to the object, pulling it down over time until it hits its ground level.
+   * Applies gravity to the object frame-by-frame.
+   * @param {number} dt - delta time since last frame
    */
-  applyGravity() {
-    setInterval(() => {
+  updateGravity(dt) {
+    this.gravityTimer += dt;
+    if (this.gravityTimer > 1000 / 25) {
       if (this.isAboveGround() || this.speedY > 0) {
         this.y -= this.speedY;
         this.speedY -= this.acceleration;
@@ -28,7 +31,8 @@ class MoveableObject extends DrawableObject {
         this.speedY = 0;
         this.y = this.getGroundLevel();
       }
-    }, 1000 / 25);
+      this.gravityTimer = 0;
+    }
   }
 
   /**

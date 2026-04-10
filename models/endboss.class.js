@@ -75,20 +75,36 @@ class Endboss extends MoveableObject {
     this.loadImages(this.IMAGES_HURT);
     this.loadImages(this.IMAGES_DEAD);
     this.x = 2900;
-    this.applyGravity();
-    this.animate();
+    this.movementTimer = 0;
+    this.stateTimer = 0;
+    this.attackTimer = 0;
   }
 
   /**
-   * Initializes all animation and behavior intervals.
+   * Called every frame from World.gameLoop
+   * @param {number} dt 
    */
-  animate() {
-    setInterval(() => {
+  update(dt) {
+    this.updateGravity(dt);
+
+    this.movementTimer += dt;
+    if (this.movementTimer > 1000 / 60) {
       this.checkFirstContact();
       this.moveTowardsCharacter();
-    }, 1000 / 60);
-    setInterval(() => this.playStates(), 200);
-    setInterval(() => this.triggerRandomAttack(), 2500);
+      this.movementTimer = 0;
+    }
+
+    this.stateTimer += dt;
+    if (this.stateTimer > 200) {
+      this.playStates();
+      this.stateTimer = 0;
+    }
+
+    this.attackTimer += dt;
+    if (this.attackTimer > 2500) {
+      this.triggerRandomAttack();
+      this.attackTimer = 0;
+    }
   }
 
   /**

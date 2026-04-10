@@ -29,15 +29,26 @@ class Chicken extends MoveableObject {
     this.loadImages(this.IMAGES_WALKING);
     this.x = 500 + Math.random() * 2000;
     this.speed = 0.15 + Math.random() * 0.5;
-    this.animate();
+    this.movementTimer = 0;
+    this.walkingTimer = 0;
   }
 
   /**
-   * Initializes movement and walking animation intervals.
+   * Called every frame from World.gameLoop
+   * @param {number} dt 
    */
-  animate() {
-    setInterval(() => this.handleMovement(), 1000 / 60);
-    setInterval(() => this.handleWalkingAnimation(), 300);
+  update(dt) {
+    this.movementTimer += dt;
+    if (this.movementTimer > 1000 / 60) {
+      this.handleMovement();
+      this.movementTimer = 0;
+    }
+
+    this.walkingTimer += dt;
+    if (this.walkingTimer > 300) {
+      this.handleWalkingAnimation();
+      this.walkingTimer = 0;
+    }
   }
 
   /**

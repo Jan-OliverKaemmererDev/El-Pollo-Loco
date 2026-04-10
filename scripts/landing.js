@@ -60,6 +60,7 @@ function restartGame() {
  * Clears all running intervals to stop the current game loop cleanly.
  */
 function clearAllGameIntervals() {
+    if (world) world.stop();
     for (let i = 1; i < 9999; i++) {
         window.clearInterval(i);
       }

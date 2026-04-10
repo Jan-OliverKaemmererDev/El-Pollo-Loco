@@ -17,6 +17,9 @@ class World extends CollisionHandler {
   throwableObjects = [];
   throwCooldown = false;
   isWon = false;
+  isRunning = true;
+  lastTime = 0;
+  collisionTimer = 0;
 
   /**
    * Creates a new World instance, initializes the canvas and starts the game loop.
@@ -28,9 +31,10 @@ class World extends CollisionHandler {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
-    this.draw();
     this.setWorld();
-    this.run();
+    
+    this.lastTime = performance.now();
+    requestAnimationFrame((ts) => this.gameLoop(ts));
   }
 
   /**
@@ -44,17 +48,49 @@ class World extends CollisionHandler {
   }
 
   /**
-   * Starts the main game loop that checks collisions and game state at 60 FPS.
+   * Main game loop running dynamically with the screen refresh rate
+   * @param {number} timestamp - The current time in milliseconds
    */
-  run() {
-    setInterval(() => {
+  gameLoop(timestamp) {
+    if (!this.isRunning) return;
+    let dt = timestamp - this.lastTime;
+    this.lastTime = timestamp;
+
+    this.update(dt);
+    this.draw();
+
+    requestAnimationFrame((ts) => this.gameLoop(ts));
+  }
+
+  /**
+   * Stops the game loop
+   */
+  stop() {
+    this.isRunning = false;
+  }
+
+  /**
+   * Updates the game logic for all objects
+   * @param {number} dt - Delta time since last frame
+   */
+  update(dt) {
+    if (this.character.update) this.character.update(dt);
+    this.level.enemies.forEach(e => { if (e.update) e.update(dt); });
+    this.level.clouds.forEach(c => { if (c.update) c.update(dt); });
+    this.level.collectableObjects.forEach(c => { if (c.update) c.update(dt); });
+    this.throwableObjects.forEach(t => { if (t.update) t.update(dt); });
+
+    this.collisionTimer += dt;
+    if (this.collisionTimer > 1000 / 60) {
       this.checkCollisions();
       this.checkThrowObjects();
       this.checkBottleCollisions();
       this.checkBottleHitsEnemy();
       this.checkBottleHitsGround();
       this.checkBossVisibility();
-    }, 1000 / 60);
+      
+      this.collisionTimer = 0;
+    }
   }
 
   /**
@@ -115,10 +151,6 @@ class World extends CollisionHandler {
     this.ctx.translate(this.camera_x, 0);
     this.drawGameObjects();
     this.ctx.translate(-this.camera_x, 0);
-    let self = this;
-    requestAnimationFrame(function () {
-      self.draw();
-    });
   }
 
   /**

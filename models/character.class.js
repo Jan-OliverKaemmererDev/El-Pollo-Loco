@@ -82,6 +82,9 @@ class Character extends MoveableObject {
 
     world;
     idleTimer = 0;
+    movementTimer = 0;
+    walkingTimer = 0;
+    stateTimer = 0;
     wasAboveGround = false;
 
     /**
@@ -95,8 +98,6 @@ class Character extends MoveableObject {
         this.loadImages(this.IMAGES_DEAD);
         this.loadImages(this.IMAGES_IDLE);
         this.loadImages(this.IMAGES_LONG_IDLE);
-        this.applyGravity();
-        this.animate();
     }
 
     isDeadAnimationTriggered = false;
@@ -115,12 +116,29 @@ class Character extends MoveableObject {
     }
 
     /**
-     * Initializes all animation intervals for movement, walking, and state transitions.
+     * Called every frame from World.gameLoop
+     * @param {number} dt 
      */
-    animate() {
-        setInterval(() => this.handleMovementTick(), 1000 / 60);
-        setInterval(() => this.handleWalkingAnimation(), 100);
-        setInterval(() => this.handleStateAnimation(), 200);
+    update(dt) {
+        this.updateGravity(dt);
+
+        this.movementTimer += dt;
+        if (this.movementTimer > 1000 / 60) {
+            this.handleMovementTick();
+            this.movementTimer = 0;
+        }
+
+        this.walkingTimer += dt;
+        if (this.walkingTimer > 100) {
+            this.handleWalkingAnimation();
+            this.walkingTimer = 0;
+        }
+
+        this.stateTimer += dt;
+        if (this.stateTimer > 200) {
+            this.handleStateAnimation();
+            this.stateTimer = 0;
+        }
     }
 
     /**

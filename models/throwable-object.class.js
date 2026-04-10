@@ -36,44 +36,45 @@ class ThrowableObject extends MoveableObject {
     this.otherDirection = direction;
     this.height = 60;
     this.width = 50;
+    this.movementTimer = 0;
+    this.animationTimer = 0;
     this.throw();
   }
 
   /**
-   * Initiates the throw by applying gravity, playing the throw sound, and starting horizontal movement.
+   * Called every frame from World.gameLoop
+   * @param {number} dt 
    */
-  throw() {
-    this.speedY = 30;
-    this.applyGravity();
-    if (typeof soundManager !== "undefined") {
-      soundManager.playBottleThrowSound();
-    }
-    this.startHorizontalMovement();
-    this.animate();
-  }
+  update(dt) {
+    this.updateGravity(dt);
 
-  /**
-   * Starts the horizontal movement interval, moving the bottle left or right.
-   */
-  startHorizontalMovement() {
-    this.moveInterval = setInterval(() => {
+    this.movementTimer += dt;
+    if (this.movementTimer > 25) {
       if (!this.isSplashed) {
         this.x += this.otherDirection ? -10 : 10;
       }
-    }, 25);
-  }
+      this.movementTimer = 0;
+    }
 
-  /**
-   * Starts the animation interval, switching between rotation and splash animations.
-   */
-  animate() {
-    setInterval(() => {
+    this.animationTimer += dt;
+    if (this.animationTimer > 50) {
       if (this.isSplashed) {
         this.playAnimation(this.IMAGES_SPLASH);
       } else {
         this.playAnimation(this.IMAGES_ROTATION);
       }
-    }, 50);
+      this.animationTimer = 0;
+    }
+  }
+
+  /**
+   * Initiates the throw by playing the throw sound and setting initial vertical speed.
+   */
+  throw() {
+    this.speedY = 30;
+    if (typeof soundManager !== "undefined") {
+      soundManager.playBottleThrowSound();
+    }
   }
 
   /**
@@ -86,8 +87,5 @@ class ThrowableObject extends MoveableObject {
       soundManager.stopBottleThrowSound();
       soundManager.playBottleShatterSound();
     }
-    setTimeout(() => {
-      clearInterval(this.moveInterval);
-    }, 100);
   }
 }

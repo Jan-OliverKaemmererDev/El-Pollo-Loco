@@ -19,15 +19,18 @@ class Coin extends MoveableObject {
     this.loadImages(this.IMAGES);
     this.x = x;
     this.y = y;
-    this.animate();
+    this.animationTimer = 0;
   }
 
   /**
-   * Starts the coin spinning animation.
+   * Called every frame from World.gameLoop
+   * @param {number} dt 
    */
-  animate() {
-    setInterval(() => {
+  update(dt) {
+    this.animationTimer += dt;
+    if (this.animationTimer > 250) {
       this.playAnimation(this.IMAGES);
-    }, 250);
+      this.animationTimer = 0;
+    }
   }
 }
